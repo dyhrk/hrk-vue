@@ -1,0 +1,26 @@
+/* logo 过渡动画
+------------------------------- */
+@keyframes logoAnimation {
+	0% {
+		transform: scale(0);
+	}
+	80% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+/* 404、401 过渡动画
+------------------------------- */
+@keyframes error-num {
+	0% {
+		transform: translateY(60px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}

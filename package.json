@@ -1,0 +1,37 @@
+{
+  "name": "study-manage",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:stage": "vite build --mode staging",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "2.0.10",
+    "axios": "0.27.2",
+    "element-plus": "^2.4.0",
+    "fuse.js": "6.6.2",
+    "js-cookie": "3.0.1",
+    "jsencrypt": "3.3.1",
+    "mitt": "^3.0.1",
+    "moment": "^2.29.4",
+    "nprogress": "0.2.0",
+    "pinia": "2.0.22",
+    "vue": "3.2.45",
+    "vue-cropper": "1.0.3",
+    "vue-i18n": "^9.10.1",
+    "vue-router": "4.1.4",
+    "vue3-scale-box": "^0.1.9"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "sass": "1.56.1",
+    "unplugin-auto-import": "^0.12.2",
+    "unplugin-vue-components": "^0.22.12",
+    "vite": "^4.0.0",
+    "vite-plugin-svg-icons": "2.0.1"
+  }
+}
