@@ -19,6 +19,11 @@ export const constantRoutes = [
     name: 'login',
     component: () => import('@/views/login.vue')
   },
+  {
+    path: '/menu',
+    component: () => import('@/views/system/menu'),
+    hidden: true
+  },
 ]
 export const dynamicRoutes = [
 ]
