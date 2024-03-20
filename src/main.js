@@ -12,6 +12,8 @@ import { useDict } from '@/utils/dict'
 import directive from './directive' // directive
 import elementIcons from '@/components/SvgIcon/svgicon'
 
+// 注册指令
+import plugins from './plugins' // plugins
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 import { parseTime, resetForm, addDateRange, handleTree, selectDictLabel, selectDictLabels } from '@/utils/lamb'
@@ -26,7 +28,7 @@ app.config.globalProperties.resetForm = resetForm
 
 // 全局组件挂载
 app.component('DictTag', DictTag)
-
+app.use(plugins)
 directive(app)
 other.elSvg(app);
 app.use(router).use(store).use(elementIcons).use(ElementPlus).mount('#app');

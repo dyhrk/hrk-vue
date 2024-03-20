@@ -20,7 +20,7 @@
       <el-row :gutter="10" class="mb8">
          <el-col :span="1.5">
             <el-button type="primary" plain icon="Plus" @click="handleAdd"
-               v-hasPermi="['system:menu:add']">新增</el-button>
+            >新增</el-button>
          </el-col>
          <el-col :span="1.5">
             <el-button type="info" plain icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
@@ -30,12 +30,17 @@
 
       <el-table v-if="refreshTable" v-loading="loading" :data="menuList" row-key="menuId"
          :default-expand-all="isExpandAll" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-         <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160"></el-table-column>
-         <el-table-column prop="icon" label="图标" align="center" width="100">
+         <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160">
+            <template #default="scope">
+						<SvgIcon :name="scope.row.icon" />
+						<span class="ml10">{{ scope.row.menuName }}</span>
+					</template>
+         </el-table-column>
+         <!-- <el-table-column prop="icon" label="图标" align="center" width="100">
             <template #default="scope">
                <svg-icon :icon-class="scope.row.icon" />
             </template>
-         </el-table-column>
+         </el-table-column> -->
          <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
          <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
          <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
@@ -106,7 +111,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>是否外链
                         </span>
                      </template>
@@ -121,7 +126,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            路由地址
                         </span>
@@ -134,7 +139,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            组件路径
                         </span>
@@ -149,7 +154,7 @@
                         <span>
                            <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)"
                               placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            权限字符
                         </span>
@@ -162,7 +167,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            路由参数
                         </span>
@@ -174,7 +179,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            是否缓存
                         </span>
@@ -190,7 +195,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            显示状态
                         </span>
@@ -206,7 +211,7 @@
                      <template #label>
                         <span>
                            <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
-                              <!-- <el-icon><question-filled /></el-icon> -->
+                             <el-icon><question-filled /></el-icon> 
                            </el-tooltip>
                            菜单状态
                         </span>
@@ -305,24 +310,7 @@ function reset() {
    };
    proxy.resetForm("menuRef");
 }
-/** 展示下拉图标 */
-function showSelectIcon() {
-   iconSelectRef.value.reset();
-   showChooseIcon.value = true;
-}
-/** 选择图标 */
-function selected(name) {
-   form.value.icon = name;
-   showChooseIcon.value = false;
-}
-/** 图标外层点击隐藏下拉列表 */
-function hideSelectIcon(event) {
-   var elem = event.relatedTarget || event.srcElement || event.target || event.currentTarget;
-   var className = elem.className;
-   if (className !== "el-input__inner") {
-      showChooseIcon.value = false;
-   }
-}
+
 /** 搜索按钮操作 */
 function handleQuery() {
    getList();
@@ -355,7 +343,7 @@ function toggleExpandAll() {
 /** 修改按钮操作 */
 async function handleUpdate(row) {
    reset();
-   await getTreeselect();
+   getTreeselect();
    getMenu(row.menuId).then(response => {
       form.value = response.data;
       open.value = true;

@@ -35,6 +35,17 @@ const sessionCache = {
 	remove(key) {
 		sessionStorage.removeItem(localCache.setKey(key));
 	},
+	getJSON(key) {
+		const value = this.get(key)
+		if (value != null) {
+			return JSON.parse(value)
+		}
+	},
+	setJSON(key, jsonValue) {
+		if (jsonValue != null) {
+			this.set(key, JSON.stringify(jsonValue))
+		}
+	},
 	// 移除全部临时缓存
 	clear() {
 		sessionStorage.clear();
