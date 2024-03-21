@@ -12,7 +12,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "2.0.10",
     "axios": "0.27.2",
-    "element-plus": "2.4.3",
+    "element-plus": "^2.3.3",
     "fuse.js": "6.6.2",
     "js-cookie": "3.0.1",
     "jsencrypt": "3.3.1",

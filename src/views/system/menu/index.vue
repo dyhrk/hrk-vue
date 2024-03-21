@@ -382,3 +382,9 @@ function handleDelete(row) {
 
 getList();
 </script>
+<style>
+.app-container{
+   height: 1000px;
+   overflow: auto;
+}
+</style>

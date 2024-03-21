@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 import Layout from '@/layout'
 export const constantRoutes = [
   {
-    path: '/',
+    path: '',
     component: Layout,
     redirect: '/index',
     children: [
@@ -10,7 +10,7 @@ export const constantRoutes = [
         path: '/index',
         component: () => import('@/views/index'),
         name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'iconfont icon-shouye', affix: true }
       }
     ]
   },

@@ -1,3 +1,5 @@
+@import 'mixins/index.scss';
+
 /* Button 按钮
 ------------------------------- */
 // 第三方字体图标大小
@@ -36,6 +38,144 @@
 				padding: 20px !important;
 			}
 		}
+	}
+}
+
+
+/* NavMenu 导航菜单
+------------------------------- */
+// 鼠标 hover 时颜色
+.el-menu-hover-bg-color {
+	background-color: var(--next-bg-menuBarActiveColor) !important;
+}
+// 默认样式修改
+.el-menu {
+	border-right: none !important;
+	width: 220px;
+}
+.el-menu-item {
+	height: 56px !important;
+	line-height: 56px !important;
+}
+.el-menu-item,
+.el-sub-menu__title {
+	color: var(--next-bg-menuBarColor) !important;
+}
+// 修复点击左侧菜单折叠再展开时，宽度不跟随问题
+.el-menu--collapse {
+	width: 64px !important;
+}
+// 外部链接时
+.el-menu-item a,
+.el-menu-item a:hover,
+.el-menu-item i,
+.el-sub-menu__title i {
+	color: inherit;
+	text-decoration: none;
+}
+// 第三方图标字体间距/大小设置
+.el-menu-item .iconfont,
+.el-sub-menu .iconfont,
+.el-menu-item .fa,
+.el-sub-menu .fa {
+	@include generalIcon;
+}
+// 水平菜单、横向菜单高亮 背景色，鼠标 hover 时，有子级菜单的背景色
+.el-menu-item.is-active,
+.el-sub-menu.is-active .el-sub-menu__title,
+.el-sub-menu:not(.is-opened):hover .el-sub-menu__title {
+	@extend .el-menu-hover-bg-color;
+}
+.el-menu-item:hover {
+	@extend .el-menu-hover-bg-color;
+}
+.el-sub-menu.is-active.is-opened .el-sub-menu__title {
+	background-color: unset !important;
+}
+// 子级菜单背景颜色
+// .el-menu--inline {
+// 	background: var(--next-bg-menuBar-light-1);
+// }
+// 水平菜单、横向菜单折叠 a 标签
+.el-popper.is-dark a {
+	color: var(--el-color-white) !important;
+	text-decoration: none;
+}
+// 水平菜单、横向菜单折叠背景色
+.el-popper.is-pure.is-light {
+	// 水平菜单
+	.el-menu--vertical {
+		background: var(--next-bg-menuBar);
+		.el-sub-menu.is-active .el-sub-menu__title {
+			color: var(--el-menu-active-color);
+		}
+		.el-popper.is-pure.is-light {
+			.el-menu--vertical {
+				.el-sub-menu .el-sub-menu__title {
+					background-color: unset !important;
+					color: var(--next-bg-menuBarColor);
+				}
+				.el-sub-menu.is-active .el-sub-menu__title {
+					color: var(--el-menu-active-color);
+				}
+			}
+		}
+	}
+	// 横向菜单
+	.el-menu--horizontal {
+		background: var(--next-bg-topBar);
+		.el-menu-item,
+		.el-sub-menu {
+			height: 48px !important;
+			line-height: 48px !important;
+			color: var(--next-bg-topBarColor);
+			.el-sub-menu__title {
+				height: 48px !important;
+				line-height: 48px !important;
+				color: var(--next-bg-topBarColor);
+			}
+			.el-popper.is-pure.is-light {
+				.el-menu--horizontal {
+					.el-sub-menu .el-sub-menu__title {
+						background-color: unset !important;
+						color: var(--next-bg-topBarColor);
+					}
+					.el-sub-menu.is-active .el-sub-menu__title {
+						color: var(--el-menu-active-color);
+					}
+				}
+			}
+		}
+		.el-menu-item.is-active,
+		.el-sub-menu.is-active .el-sub-menu__title {
+			color: var(--el-menu-active-color);
+		}
+	}
+}
+// 横向菜单（经典、横向）布局
+.el-menu.el-menu--horizontal {
+	border-bottom: none !important;
+	width: 100% !important;
+	.el-menu-item,
+	.el-sub-menu__title {
+		height: 48px !important;
+		color: var(--next-bg-topBarColor);
+	}
+	.el-menu-item:not(.is-active):hover,
+	.el-sub-menu:not(.is-active):hover .el-sub-menu__title {
+		color: var(--next-bg-topBarColor);
+	}
+}
+// 菜单收起时，图标不居中问题
+.el-menu--collapse {
+	.el-menu-item .iconfont,
+	.el-sub-menu .iconfont,
+	.el-menu-item .fa,
+	.el-sub-menu .fa {
+		margin-right: 0 !important;
+	}
+	.el-sub-menu__title {
+		padding-right: 0 !important;
 	}
 }
 
@@ -78,9 +218,10 @@
 		padding-right: 5px;
 	}
 }
+
 .fixed-width {
 	.el-button--mini {
-	  padding: 7px 10px;
-	  width: 60px;
+		padding: 7px 10px;
+		width: 60px;
 	}
-  }
+}

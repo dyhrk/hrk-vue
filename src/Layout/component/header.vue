@@ -18,6 +18,6 @@ const storesTagsViewRoutes = useTagsViewRoutes();
 const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 
 onMounted(() => {
-	console.log(isTagsViewCurrenFull.value);
+	
 })
 </script>
