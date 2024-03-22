@@ -3,7 +3,6 @@
     <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path, onlyOneChild.query)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)">
-          <!-- <svg-icon :icon-class="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"/> -->
           <SvgIcon :name="onlyOneChild.meta && onlyOneChild.meta.icon ?  onlyOneChild.meta.icon : '' " />
           <template #title><span >{{ onlyOneChild.meta.title }}</span></template>
         </el-menu-item>
@@ -12,7 +11,6 @@
 
     <el-sub-menu v-else  :index="resolvePath(item.path)" teleported>
       <template #title>
-        <!-- <svg-icon :icon-class="item.meta && item.meta.icon" /> -->
         <SvgIcon :name=" item.meta && item.meta.icon ?  item.meta.icon : '' " />
         <span >{{ item.meta.title }}</span>
       </template>

@@ -2,59 +2,51 @@
 	<div class="layout-navbars-breadcrumb-user pr15" :style="{ flex: layoutUserFlexNum }">
 		<el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onComponentSizeChange">
 			<div class="layout-navbars-breadcrumb-user-icon">
-				<!-- <i class="iconfont icon-ziti" :title="$t('message.user.title0')"></i> -->
-				<i class="iconfont icon-ziti" title="'message.user.title0"></i>
+				<i class="iconfont icon-ziti" title="组件大小"></i>
 			</div>
 			<template #dropdown>
-				<!-- <el-dropdown-menu>
-					<el-dropdown-item command="large" :disabled="state.disabledSize === 'large'">{{
-		$t('message.user.dropdownLarge') }}</el-dropdown-item>
-					<el-dropdown-item command="default" :disabled="state.disabledSize === 'default'">{{
-		$t('message.user.dropdownDefault') }}</el-dropdown-item>
-					<el-dropdown-item command="small" :disabled="state.disabledSize === 'small'">{{
-		$t('message.user.dropdownSmall') }}</el-dropdown-item>
-				</el-dropdown-menu> -->
+				<el-dropdown-menu>
+					<el-dropdown-item command="large" :disabled="state.disabledSize === 'large'">大型</el-dropdown-item>
+					<el-dropdown-item command="default" :disabled="state.disabledSize === 'default'">
+						默认</el-dropdown-item>
+					<el-dropdown-item command="small" :disabled="state.disabledSize === 'small'">小型</el-dropdown-item>
+				</el-dropdown-menu>
 			</template>
 		</el-dropdown>
 		<el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onLanguageChange">
 			<div class="layout-navbars-breadcrumb-user-icon">
-				<!-- <i class="iconfont" :class="state.disabledI18n === 'en' ? 'icon-fuhao-yingwen' : 'icon-fuhao-zhongwen'"
-					title="message.user.title1"></i> -->
-				<!-- :title="$t('message.user.title1')" -->
+				<i class="iconfont" :class="state.disabledI18n === 'en' ? 'icon-fuhao-yingwen' : 'icon-fuhao-zhongwen'"
+					title="语言切换"></i>
+
 			</div>
 			<template #dropdown>
 				<el-dropdown-menu>
-					<!-- <el-dropdown-item command="zh-cn" :disabled="state.disabledI18n === 'zh-cn'">简体中文</el-dropdown-item>
+					<el-dropdown-item command="zh-cn" :disabled="state.disabledI18n === 'zh-cn'">简体中文</el-dropdown-item>
 					<el-dropdown-item command="en" :disabled="state.disabledI18n === 'en'">English</el-dropdown-item>
-					<el-dropdown-item command="zh-tw" :disabled="state.disabledI18n === 'zh-tw'">繁體中文</el-dropdown-item> -->
+					<!-- <el-dropdown-item command="zh-tw" :disabled="state.disabledI18n === 'zh-tw'">繁體中文</el-dropdown-item> -->
 				</el-dropdown-menu>
 			</template>
 		</el-dropdown>
-		<div class="layout-navbars-breadcrumb-user-icon" @click="onSearchClick">
-			<!-- <el-icon :title="$t('message.user.title2')">
-				<ele-Search />
-			</el-icon> -->
-		</div>
 		<div class="layout-navbars-breadcrumb-user-icon" @click="onLayoutSetingClick">
-			<!-- <i class="icon-skin iconfont" :title="$t('message.user.title3')"></i> -->
+			<i class="icon-skin iconfont" title="布局配置"></i>
 		</div>
-		<!-- <div class="layout-navbars-breadcrumb-user-icon" ref="userNewsBadgeRef" v-click-outside="onUserNewsClick">
+		<div class="layout-navbars-breadcrumb-user-icon" ref="userNewsBadgeRef" v-click-outside="onUserNewsClick">
 			<el-badge :is-dot="true">
-				<el-icon title="sadsad">
+				<el-icon title="消息">
 					<ele-Bell />
 				</el-icon>
 			</el-badge>
-		</div> -->
+		</div>
 		<!-- <el-popover ref="userNewsRef" :virtual-ref="userNewsBadgeRef" placement="bottom" trigger="click"
 			transition="el-zoom-in-top" virtual-triggering :width="300" :persistent="false">
 			<UserNews /> 
-		</el-popover>-->
+		</el-popover> -->
 		<div class="layout-navbars-breadcrumb-user-icon mr10" @click="onScreenfullClick">
-			<!-- <i
+			<i
 				class="iconfont"
-				:title="state.isScreenfull ? $t('message.user.title6') : $t('message.user.title5')"
+				:title="state.isScreenfull ? '关全屏' : '开全屏'"
 				:class="!state.isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"
-			></i> -->
+			></i>
 		</div>
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-navbars-breadcrumb-user-link">
@@ -75,7 +67,6 @@
 				</el-dropdown-menu>
 			</template>
 		</el-dropdown>
-		<!-- <Search ref="searchRef" /> -->
 	</div>
 </template>
 
@@ -93,6 +84,17 @@ const userNewsRef = ref();
 const onUserNewsClick = () => {
 	unref(userNewsRef).popperRef?.delayHide?.();
 };
+
+const state = reactive({
+	isScreenfull: false,
+	disabledI18n: 'zh-cn',
+	disabledSize: 'large',
+});
+// 布局配置 icon 点击时
+const onLayoutSetingClick = () => {
+	mittBus.emit('openSetingsDrawer');
+};
+
 // 语言切换
 const onLanguageChange = (lang) => {
 	// Local.remove('themeConfig');
@@ -159,6 +161,19 @@ const layoutUserFlexNum = computed(() => {
 	else num = '';
 	return num;
 });
+
+// 全屏点击时
+const onScreenfullClick = () => {
+	if (!screenfull.isEnabled) {
+		ElMessage.warning('暂不不支持全屏');
+		return false;
+	}
+	screenfull.toggle();
+	screenfull.on('change', () => {
+		if (screenfull.isFullscreen) state.isScreenfull = true;
+		else state.isScreenfull = false;
+	});
+};
 
 </script>
 

@@ -1,9 +1,8 @@
 <template>
 	<div class="layout-navbars-breadcrumb-index">
-		 <!-- <Logo v-if="setIsShowLogo" /> -->
 		<Breadcrumb />
 		<!--<Horizontal :menuList="state.menuList" v-if="isLayoutTransverse" />-->
-		<!-- <User />  -->
+		<User /> 
 	</div>
 </template>
 

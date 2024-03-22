@@ -4,7 +4,7 @@
 		<el-container class="layout-container-view h100">
 			<el-scrollbar ref="layoutScrollbarRef" class="layout-backtop">
 				<LayoutHeader />
-				<!-- <LayoutMain ref="layoutMainRef" /> -->
+				<LayoutMain ref="layoutMainRef" />
 			</el-scrollbar>
 		</el-container>
 	</el-container>
@@ -18,9 +18,9 @@
 // import { NextLoading } from '/@/utils/loading';
 
 // 引入组件
-const LayoutAside = defineAsyncComponent(() => import('@/layout/component/aside.vue'));
-const LayoutHeader = defineAsyncComponent(() => import('@/layout/component/header.vue'));
-// const LayoutMain = defineAsyncComponent(() => import('/@/layout/component/main.vue'));
+const LayoutAside = defineAsyncComponent(() => import('@/Layout/component/aside.vue'));
+const LayoutHeader = defineAsyncComponent(() => import('@/Layout/component/header.vue'));
+const LayoutMain = defineAsyncComponent(() => import('@/Layout/component/main.vue'));
 
 // // 定义变量内容
 // const layoutScrollbarRef = ref<RefType>('');
