@@ -225,3 +225,10 @@
 		width: 60px;
 	}
 }
+
+.el-scrollbar__wrap {
+	max-height: 100%;
+}
+.el-select-dropdown .el-scrollbar__wrap {
+	overflow-x: scroll !important;
+}
