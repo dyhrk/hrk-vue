@@ -14,6 +14,7 @@
     "axios": "0.27.2",
     "element-plus": "^2.3.3",
     "fuse.js": "6.6.2",
+    "sortablejs": "^1.15.0",
     "js-cookie": "3.0.1",
     "jsencrypt": "3.3.1",
     "mitt": "^3.0.1",

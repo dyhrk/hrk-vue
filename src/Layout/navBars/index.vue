@@ -1,29 +1,29 @@
 <template>
 	<div class="layout-navbars-container">
 		<BreadcrumbIndex />
-		<!-- <TagsView v-if="setShowTagsView" /> -->
+		<TagsView v-if="setShowTagsView" />
 	</div>
 </template>
 
 <script setup name="layoutNavBars">
 import { defineAsyncComponent, computed } from 'vue';
-// import { storeToRefs } from 'pinia';
-// import { useThemeConfig } from '/@/stores/themeConfig';
+import { storeToRefs } from 'pinia';
+import useSettingsStore from '@/store/modules/settings'
+
+const settingsStore = useSettingsStore()
 
 // 引入组件
 const BreadcrumbIndex = defineAsyncComponent(() => import('@/Layout/navBars/topBar/index.vue'));
 
-// const TagsView = defineAsyncComponent(() => import('/@/layout/navBars/tagsView/tagsView.vue'));
+const TagsView = defineAsyncComponent(() => import('@/Layout/navBars/tagsView/tagsView.vue'));
 
-// // 定义变量内容
-// const storesThemeConfig = useThemeConfig();
-// const { themeConfig } = storeToRefs(storesThemeConfig);
+const { settingsConfig } = storeToRefs(settingsStore);
 
-// // 是否显示 tagsView
-// const setShowTagsView = computed(() => {
-// 	let { layout, isTagsview } = themeConfig.value;
-// 	return layout !== 'classic' && isTagsview;
-// });
+// 是否显示 tagsView
+const setShowTagsView = computed(() => {
+	let { layout, isTagsview } = settingsConfig.value;
+	return layout !== 'classic' && isTagsview;
+});
 </script>
 
 <style scoped lang="scss">

@@ -2,7 +2,7 @@
 	<div class="layout-navbars-breadcrumb-index">
 		<Breadcrumb />
 		<!--<Horizontal :menuList="state.menuList" v-if="isLayoutTransverse" />-->
-		<!-- <User />  -->
+		<User /> 
 	</div>
 </template>
 
