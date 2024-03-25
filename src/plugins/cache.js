@@ -1,4 +1,4 @@
-const localCache = {
+export const localCache = {
 	// 查看 v2.4.3版本更新日志
 	setKey(key) {
 		return `${__NEXT_NAME__}:${key}`;
@@ -21,7 +21,7 @@ const localCache = {
 		localStorage.clear();
 	},
 };
-const sessionCache = {
+export const sessionCache = {
 	// 设置临时缓存
 	set(key, val) {
 		sessionStorage.setItem(localCache.setKey(key), JSON.stringify(val));
@@ -51,13 +51,3 @@ const sessionCache = {
 		sessionStorage.clear();
 	},
 };
-export default {
-	/**
-	 * 会话级缓存
-	 */
-	Session: sessionCache,
-	/**
-	 * 本地缓存
-	 */
-	local: localCache
-}

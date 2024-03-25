@@ -66,7 +66,7 @@
 
 <script setup name="Cache">
 import { getCache } from '@/api/monitor/cache';
-import * as echarts from 'echarts';
+// import * as echarts from 'echarts';
 
 const cache = ref([]);
 const commandstats = ref(null);
@@ -98,6 +98,7 @@ function getList() {
         }
       ]
     });
+
     const usedmemoryInstance = echarts.init(usedmemory.value, "macarons");
     usedmemoryInstance.setOption({
       tooltip: {
@@ -121,10 +122,6 @@ function getList() {
         }
       ]
     })
-    window.addEventListener("resize", () => {
-      commandstatsIntance.resize();
-      usedmemoryInstance.resize();
-    });
   })
 }
 

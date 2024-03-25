@@ -12,7 +12,7 @@
 
 <script setup name="layoutAside">
 import useSettingsStore from '@/store/modules/settings'
-import cache from '@/plugins/cache'
+// import cache from '@/plugins/cache'
 import { useChangeColor } from '@/utils/theme';
 
 const { getLightColor, getDarkColor } = useChangeColor();

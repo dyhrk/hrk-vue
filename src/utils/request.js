@@ -3,7 +3,7 @@ import { ElNotification , ElMessageBox, ElMessage } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams } from '@/utils/lamb'
-import cache from '@/plugins/cache'
+import {sessionCache} from '@/plugins/cache'
 import useUserStore from '@/store/modules/user'
 
 // 是否显示重新登录
@@ -46,9 +46,9 @@ service.interceptors.request.use(config => {
       console.warn(`[${config.url}]: ` + '请求数据大小超出允许的5M限制，无法进行防重复提交验证。')
       return config;
     }
-    const sessionObj = cache.Session.getJSON('sessionObj')
+    const sessionObj = sessionCache.getJSON('sessionObj')
     if (sessionObj === undefined || sessionObj === null || sessionObj === '') {
-      cache.Session.setJSON('sessionObj', requestObj)
+      sessionCache.setJSON('sessionObj', requestObj)
     } else {
       const s_url = sessionObj.url;                // 请求地址
       const s_data = sessionObj.data;              // 请求数据
@@ -59,7 +59,7 @@ service.interceptors.request.use(config => {
         console.warn(`[${s_url}]: ` + message)
         return Promise.reject(new Error(message))
       } else {
-        cache.Session.setJSON('sessionObj', requestObj)
+        sessionCache.setJSON('sessionObj', requestObj)
       }
     }
   }

@@ -1,7 +1,7 @@
 import useSettingsStore from '@/store/modules/settings'
 import * as svg from '@element-plus/icons-vue';
 import pinia from '@/store/index';
-import cache from '@/plugins/cache'
+import { localCache } from '@/plugins/cache'
 
 // 引入组件
 const SvgIcon = defineAsyncComponent(() => import('@/components/SvgIcon/index.vue'));
@@ -54,7 +54,7 @@ export function elSvg(app) {
 export const globalComponentSize = () => {
 	const stores = useSettingsStore(pinia);
 	const { settingsConfig } = storeToRefs(stores);
-	return cache.local.get('settingsConfig')?.globalComponentSize || settingsConfig.value?.globalComponentSize;
+	return localCache.get('settingsConfig')?.globalComponentSize || settingsConfig.value?.globalComponentSize;
 };
 
 const other = {

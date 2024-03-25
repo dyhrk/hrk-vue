@@ -21,11 +21,16 @@
 	overflow: hidden;
 }
 
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	outline: none !important;
+}
+
 html,
 body,
 #app {
-	margin: 0;
-	padding: 0;
 	width: 100%;
 	height: 100%;
 	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
@@ -38,17 +43,34 @@ body,
 	position: relative;
 }
 
+:root {
+	--next-color-white: #ffffff;
+	--next-bg-main-color: #f8f8f8;
+	--next-bg-color: #f5f5ff;
+	--next-border-color-light: #f1f2f3;
+	--next-color-primary-lighter: #ecf5ff;
+	--next-color-success-lighter: #f0f9eb;
+	--next-color-warning-lighter: #fdf6ec;
+	--next-color-danger-lighter: #fef0f0;
+	--next-color-dark-hover: #0000001a;
+	--next-color-menu-hover: rgba(0, 0, 0, 0.2);
+	--next-color-user-hover: rgba(0, 0, 0, 0.04);
+	--next-color-seting-main: #e9eef3;
+	--next-color-seting-aside: #d3dce6;
+	--next-color-seting-header: #b3c0d1;
+}
+
 a:focus,
 a:active {
-  outline: none;
+	outline: none;
 }
 
 a,
 a:focus,
 a:hover {
-  cursor: pointer;
-  color: inherit;
-  text-decoration: none;
+	cursor: pointer;
+	color: inherit;
+	text-decoration: none;
 }
 
 
@@ -57,11 +79,17 @@ a:hover {
 .layout-container {
 	width: 100%;
 	height: 100%;
+
+	.app-container {
+		padding: 15px !important;
+	}
+
 	.layout-flex {
 		display: flex;
 		flex-direction: column;
 		flex: 1;
 	}
+
 	.layout-aside {
 		background: var(--next-bg-menuBar);
 		box-shadow: 2px 0 6px rgb(0 21 41 / 1%);
@@ -72,6 +100,7 @@ a:hover {
 		flex-direction: column;
 		overflow-x: hidden !important;
 	}
+
 	.layout-header {
 		padding: 0 !important;
 		height: auto !important;
@@ -84,9 +113,11 @@ a:hover {
 		background-color: var(--next-bg-main-color);
 		display: flex;
 		flex-direction: column;
+
 		// 内层 el-scrollbar样式，用于界面高度自适应（main.vue）
 		.layout-main-scroll {
 			@extend .layout-flex;
+
 			.layout-parent {
 				@extend .layout-flex;
 				position: relative;
@@ -99,10 +130,11 @@ a:hover {
 		width: 220px !important;
 		transition: width 0.3s ease;
 	}
+
 	.el-scrollbar {
 		width: 100%;
 	}
-	
+
 }
 
 /* 字体大小全局样式
@@ -119,24 +151,31 @@ a:hover {
 	.mt#{$i} {
 		margin-top: #{$i}px !important;
 	}
+
 	.mr#{$i} {
 		margin-right: #{$i}px !important;
 	}
+
 	.mb#{$i} {
 		margin-bottom: #{$i}px !important;
 	}
+
 	.ml#{$i} {
 		margin-left: #{$i}px !important;
 	}
+
 	.pt#{$i} {
 		padding-top: #{$i}px !important;
 	}
+
 	.pr#{$i} {
 		padding-right: #{$i}px !important;
 	}
+
 	.pb#{$i} {
 		padding-bottom: #{$i}px !important;
 	}
+
 	.pl#{$i} {
 		padding-left: #{$i}px !important;
 	}

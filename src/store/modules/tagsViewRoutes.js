@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import cache from '@/plugins/cache'
+import { sessionCache } from '@/plugins/cache'
 
 /**
  * TagsView 路由列表
@@ -16,7 +16,7 @@ const useTagsViewRoutes = defineStore('tagsViewRoutes', {
 			this.tagsViewRoutes = data;
 		},
 		setCurrenFullscreen(bool) {
-			cache.Session.set('isTagsViewCurrenFull', bool);
+			sessionCache.set('isTagsViewCurrenFull', bool);
 			this.isTagsViewCurrenFull = bool;
 		},
 	},

@@ -1,82 +1,73 @@
 <template>
-	<div class="layout-navbars-tagsview" :class="{ 'layout-navbars-tagsview-shadow': getThemeConfig.layout === 'classic' }">
+	<div class="layout-navbars-tagsview"
+		:class="{ 'layout-navbars-tagsview-shadow': getsettingsConfig.layout === 'classic' }">
 		<el-scrollbar ref="scrollbarRef" @wheel.prevent="onHandleScroll">
 			<ul class="layout-navbars-tagsview-ul" :class="setTagsStyle" ref="tagsUlRef">
-				<li
-					v-for="(v, k) in state.tagsViewList"
-					:key="k"
-					class="layout-navbars-tagsview-ul-li"
-					:data-url="v.url"
-					:class="{ 'is-active': isActive(v) }"
-					@contextmenu.prevent="onContextmenu(v, $event)"
-					@mousedown="onMousedownMenu(v, $event)"
-					@click="onTagsClick(v, k)"
-					:ref="
-						(el) => {
-							if (el) tagsRefs[k] = el;
-						}
-					"
-				>
+				<li v-for="(v, k) in state.tagsViewList" :key="k" class="layout-navbars-tagsview-ul-li"
+					:data-url="v.url" :class="{ 'is-active': isActive(v) }"
+					@contextmenu.prevent="onContextmenu(v, $event)" @mousedown="onMousedownMenu(v, $event)"
+					@click="onTagsClick(v, k)" :ref="(el) => {
+			if (el) tagsRefs[k] = el;
+		}
+			">
+
 					<i class="iconfont icon-webicon318 layout-navbars-tagsview-ul-li-iconfont" v-if="isActive(v)"></i>
-					<SvgIcon :name="v.meta.icon" v-if="!isActive(v) && getThemeConfig.isTagsviewIcon" class="pr5" />
-					<span>{{ setTagsViewNameI18n(v) }}</span>
+					<SvgIcon :name="v.meta.icon" v-if="!isActive(v) && getsettingsConfig.isTagsviewIcon" class="pr5" />
+					<span>{{ v.meta.title }}</span>
 					<template v-if="isActive(v)">
-						<SvgIcon
-							name="ele-RefreshRight"
-							class="ml5 layout-navbars-tagsview-ul-li-refresh"
-							@click.stop="refreshCurrentTagsView($route.fullPath)"
-						/>
-						<SvgIcon
-							name="ele-Close"
-							class="layout-navbars-tagsview-ul-li-icon layout-icon-active"
+						<SvgIcon name="ele-RefreshRight" class="ml5 layout-navbars-tagsview-ul-li-refresh"
+							@click.stop="refreshCurrentTagsView($route.fullPath)" />
+						<SvgIcon name="ele-Close" class="layout-navbars-tagsview-ul-li-icon layout-icon-active"
 							v-if="!v.meta.isAffix"
-							@click.stop="closeCurrentTagsView(getThemeConfig.isShareTagsView ? v.path : v.url)"
-						/>
+							@click.stop="closeCurrentTagsView(getsettingsConfig.isShareTagsView ? v.path : v.url)" />
 					</template>
-					<SvgIcon
-						name="ele-Close"
-						class="layout-navbars-tagsview-ul-li-icon layout-icon-three"
+					<SvgIcon name="ele-Close" class="layout-navbars-tagsview-ul-li-icon layout-icon-three"
 						v-if="!v.meta.isAffix"
-						@click.stop="closeCurrentTagsView(getThemeConfig.isShareTagsView ? v.path : v.url)"
-					/>
+						@click.stop="closeCurrentTagsView(getsettingsConfig.isShareTagsView ? v.path : v.url)" />
 				</li>
 			</ul>
 		</el-scrollbar>
-		<Contextmenu :dropdown="state.dropdown" ref="contextmenuRef" @currentContextmenuClick="onCurrentContextmenuClick" />
+		<!-- <Contextmenu :dropdown="state.dropdown" ref="contextmenuRef" @currentContextmenuClick="onCurrentContextmenuClick" /> -->
 	</div>
 </template>
 
-<script setup  name="layoutTagsView">
-import { defineAsyncComponent, reactive, onMounted, computed, ref, nextTick, onBeforeUpdate, onBeforeMount, onUnmounted, watch } from 'vue';
-import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
+<script setup name="layoutTagsView">
+import usePermissionStore from '@/store/modules/permission'
 import Sortable from 'sortablejs';
-import { ElMessage } from 'element-plus';
+// import { ElMessage } from 'element-plus';
 import { storeToRefs } from 'pinia';
-import { useTagsViewRoutes } from '@/store/tagsViewRoutes';
-import { useThemeConfig } from '@/store/themeConfig';
-import { useKeepALiveNames } from '@/stores/keepAliveNames';
-import { useRoutesList } from '@/stores/routesList';
-import { Session } from '@/utils/storage';
-import { isObjectValueEqual } from '@/utils/arrayOperation';
-import other from '@/utils/other';
-import mittBus from '@/utils/mitt';
+import useTagsViewRoutes from '@/store/modules/tagsViewRoutes';
 
-// 引入组件
-const Contextmenu = defineAsyncComponent(() => import('@/Layout/navBars/tagsView/contextmenu.vue'));
+import useSettingsStore from '@/store/modules/settings'
+import useTagsViewStore from '@/store/modules/tagsView'
+
+const settingsStore = useSettingsStore()
+const { settingsConfig } = storeToRefs(settingsStore);
+
+
+// import { useKeepALiveNames } from '@/stores/keepAliveNames';
+// import { useRoutesList } from '@/stores/routesList';
+// import { Session } from '@/utils/storage';
+// import { isObjectValueEqual } from '@/utils/arrayOperation';
+// import other from '@/utils/other';
+// import mittBus from '@/utils/mitt';
+
+// // 引入组件
+// const Contextmenu = defineAsyncComponent(() => import('@/Layout/navBars/tagsView/contextmenu.vue'));
 
 // 定义变量内容
 const tagsRefs = ref([]);
+const visitedViews = computed(() => useTagsViewStore().visitedViews);
+
 const scrollbarRef = ref();
 const contextmenuRef = ref();
-const tagsUlRef = ref();
-const stores = useTagsViewRoutes();
-const storesThemeConfig = useThemeConfig();
+// const tagsUlRef = ref();
+// const stores = useTagsViewRoutes();
 const storesTagsViewRoutes = useTagsViewRoutes();
-const storesRoutesList = useRoutesList();
-const { themeConfig } = storeToRefs(storesThemeConfig);
+// const storesRoutesList = useRoutesList();
 const { tagsViewRoutes } = storeToRefs(storesTagsViewRoutes);
-const { routesList } = storeToRefs(storesRoutesList);
-const storesKeepALiveNames = useKeepALiveNames();
+// const { routesList } = storeToRefs(storesRoutesList);
+// const storesKeepALiveNames = useKeepALiveNames();
 const route = useRoute();
 const router = useRouter();
 const state = reactive({
@@ -85,27 +76,30 @@ const state = reactive({
 	dropdown: { x: '', y: '' },
 	sortable: '',
 	tagsRefsIndex: 0,
-	tagsViewList: [],
+	tagsViewList: computed(() => useTagsViewStore().visitedViews),
 	tagsViewRoutesList: [],
 });
+import { getNormalPath } from '@/utils/lamb'
 
+const routes = computed(() => usePermissionStore().routes);
 // 动态设置 tagsView 风格样式
 const setTagsStyle = computed(() => {
-	return themeConfig.value.tagsStyle;
+	console.log("settingsConfig.value.tagsStyle",settingsConfig.value.tagsStyle,settingsConfig.value);
+	return settingsConfig.value.tagsStyle;
 });
 // 获取布局配置信息
-const getThemeConfig = computed(() => {
-	return themeConfig.value;
+const getsettingsConfig = computed(() => {
+	return settingsConfig.value;
 });
-// 设置 自定义 tagsView 名称、 自定义 tagsView 名称国际化
-const setTagsViewNameI18n = computed(() => {
-	return (v) => {
-		return other.setTagsViewNameI18n(v);
-	};
-});
+// // 设置 自定义 tagsView 名称、 自定义 tagsView 名称国际化
+// const setTagsViewNameI18n = computed(() => {
+// 	return (v) => {
+// 		return other.setTagsViewNameI18n(v);
+// 	};
+// });
 // 设置 tagsView 高亮
 const isActive = (v) => {
-	if (getThemeConfig.value.isShareTagsView) {
+	if (getsettingsConfig.value.isShareTagsView) {
 		return v.path === state.routePath;
 	} else {
 		if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
@@ -118,10 +112,7 @@ const isActive = (v) => {
 		}
 	}
 };
-// 存储 tagsViewList 到浏览器临时缓存中，页面刷新时，保留记录
-const addBrowserSetSession = (tagsViewList) => {
-	Session.set('tagsViewList', tagsViewList);
-};
+
 // 获取 pinia 中的 tagsViewRoutes 列表
 const getTagsViewRoutes = async () => {
 	state.routeActive = await setTagsViewHighlight(route);
@@ -132,20 +123,20 @@ const getTagsViewRoutes = async () => {
 };
 // pinia 中获取路由信息：如果是设置了固定的（isAffix），进行初始化显示
 const initTagsView = async () => {
-	if (Session.get('tagsViewList') && getThemeConfig.value.isCacheTagsView) {
-		state.tagsViewList = await Session.get('tagsViewList');
-	} else {
-		 state.tagsViewRoutesList.map((v) => {
-			if (v.meta?.isAffix && !v.meta.isHide) {
-				v.url = setTagsViewHighlight(v);
-				state.tagsViewList.push({ ...v });
-				storesKeepALiveNames.addCachedView(v);
-			}
-		});
-		 addTagsView(route.path, route);
-	}
+	// if (Session.get('tagsViewList') && getsettingsConfig.value.isCacheTagsView) {
+	// 	state.tagsViewList = await Session.get('tagsViewList');
+	// } else {
+	state.tagsViewRoutesList.map((v) => {
+
+		v.url = setTagsViewHighlight(v);
+		state.tagsViewList.push({ ...v });
+		// storesKeepALiveNames.addCachedView(v);
+
+	});
+	addTagsView(route.path, route);
+	// }
 	// 初始化当前元素(li)的下标
-	getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
 };
 // 处理可开启多标签详情，单标签详情（动态路由（xxx/:id/:name"），普通路由处理）
 const solveAddTagsView = async (path, to) => {
@@ -190,150 +181,126 @@ const singleAddTagsView = (path, to) => {
 };
 // 1、添加 tagsView：未设置隐藏（isHide）也添加到在 tagsView 中（可开启多标签详情，单标签详情）
 const addTagsView = (path, to) => {
-	// 防止拿取不到路由信息
-	nextTick(async () => {
-		// 修复：https://gitee.com/lyt-top/vue-next-admin/issues/I3YX6G
-		let item;
-		if (to?.meta?.isDynamic) {
-			// 动态路由（xxx/:id/:name"）：参数不同，开启多个 tagsview
-			if (!getThemeConfig.value.isShareTagsView) await solveAddTagsView(path, to);
-			else await singleAddTagsView(path, to);
-			if (state.tagsViewList.some((v) => v.path === to?.meta?.isDynamicPath)) {
-				// 防止首次进入界面时(登录进入) tagsViewList 不存浏览器中
-				addBrowserSetSession(state.tagsViewList);
-				return false;
-			}
-			item = state.tagsViewRoutesList.find((v) => v.path === to?.meta?.isDynamicPath);
-		} else {
-			// 普通路由：参数不同，开启多个 tagsview
-			if (!getThemeConfig.value.isShareTagsView) await solveAddTagsView(path, to);
-			else await singleAddTagsView(path, to);
-			if (state.tagsViewList.some((v) => v.path === path)) {
-				// 防止首次进入界面时(登录进入) tagsViewList 不存浏览器中
-				addBrowserSetSession(state.tagsViewList);
-				return false;
-			}
-			item = state.tagsViewRoutesList.find((v) => v.path === path);
+	const { name } = route
+	if (name) {
+		console.log(route);
+		useTagsViewStore().addView(route)
+		if (route.meta.link) {
+			useTagsViewStore().addIframeView(route);
+			console.log(route.meta.link);
 		}
-		if (!item) return false;
-		if (item?.meta?.isLink && !item.meta.isIframe) return false;
-		if (to?.meta?.isDynamic) item.params = to?.params ? to?.params : route.params;
-		else item.query = to?.query ? to?.query : route.query;
-		item.url = setTagsViewHighlight(item);
-		await storesKeepALiveNames.addCachedView(item);
-		await state.tagsViewList.push({ ...item });
-		await addBrowserSetSession(state.tagsViewList);
-	});
-};
-// 2、刷新当前 tagsView：
-const refreshCurrentTagsView = async (fullPath) => {
-	const decodeURIPath = decodeURI(fullPath);
-	let item = {};
-	state.tagsViewList.forEach((v) => {
-		v.transUrl = transUrlParams(v);
-		if (v.transUrl) {
-			if (v.transUrl === transUrlParams(v)) item = v;
-		} else {
-			if (v.path === decodeURIPath) item = v;
-		}
-	});
-	if (!item) return false;
-	await storesKeepALiveNames.delCachedView(item);
-	mittBus.emit('onTagsViewRefreshRouterView', fullPath);
-	if (item.meta?.isKeepAlive) storesKeepALiveNames.addCachedView(item);
-};
-// 3、关闭当前 tagsView：如果是设置了固定的（isAffix），不可以关闭
-const closeCurrentTagsView = (path) => {
-	state.tagsViewList.map((v, k, arr) => {
-		if (!v.meta?.isAffix) {
-			if (getThemeConfig.value.isShareTagsView ? v.path === path : v.url === path) {
-				storesKeepALiveNames.delCachedView(v);
-				state.tagsViewList.splice(k, 1);
-				setTimeout(() => {
-					if (state.tagsViewList.length === k && getThemeConfig.value.isShareTagsView ? state.routePath === path : state.routeActive === path) {
-						// 最后一个且高亮时
-						if (arr[arr.length - 1].meta.isDynamic) {
-							// 动态路由（xxx/:id/:name"）
-							if (k !== arr.length) router.push({ name: arr[k].name, params: arr[k].params });
-							else router.push({ name: arr[arr.length - 1].name, params: arr[arr.length - 1].params });
-						} else {
-							// 普通路由
-							if (k !== arr.length) router.push({ path: arr[k].path, query: arr[k].query });
-							else router.push({ path: arr[arr.length - 1].path, query: arr[arr.length - 1].query });
-						}
-					} else {
-						// 非最后一个且高亮时，跳转到下一个
-						if (state.tagsViewList.length !== k && getThemeConfig.value.isShareTagsView ? state.routePath === path : state.routeActive === path) {
-							if (arr[k].meta.isDynamic) {
-								// 动态路由（xxx/:id/:name"）
-								router.push({ name: arr[k].name, params: arr[k].params });
-							} else {
-								// 普通路由
-								router.push({ path: arr[k].path, query: arr[k].query });
-							}
-						}
-					}
-				}, 0);
-			}
-		}
-	});
-	addBrowserSetSession(state.tagsViewList);
-};
-// 4、关闭其它 tagsView：如果是设置了固定的（isAffix），不进行关闭
-const closeOtherTagsView = (path) => {
-	if (Session.get('tagsViewList')) {
-		state.tagsViewList = [];
-		Session.get('tagsViewList').map((v) => {
-			if (v.meta?.isAffix && !v.meta.isHide) {
-				v.url = setTagsViewHighlight(v);
-				storesKeepALiveNames.delOthersCachedViews(v);
-				state.tagsViewList.push({ ...v });
-			}
-		});
-		addTagsView(path, route);
-		addBrowserSetSession(state.tagsViewList);
 	}
+	return false
 };
-// 5、关闭全部 tagsView：如果是设置了固定的（isAffix），不进行关闭
-const closeAllTagsView = () => {
-	if (Session.get('tagsViewList')) {
-		storesKeepALiveNames.delAllCachedViews();
-		state.tagsViewList = [];
-		Session.get('tagsViewList').map((v) => {
-			if (v.meta?.isAffix && !v.meta.isHide) {
-				v.url = setTagsViewHighlight(v);
-				state.tagsViewList.push({ ...v });
-				router.push({ path: state.tagsViewList[state.tagsViewList.length - 1].path });
-			}
-		});
-		addBrowserSetSession(state.tagsViewList);
-	}
-};
-// 6、开启当前页面全屏
-const openCurrenFullscreen = async (path) => {
-	const item = state.tagsViewList.find((v) => (getThemeConfig.value.isShareTagsView ? v.path === path : v.url === path));
-	if (item.meta.isDynamic) await router.push({ name: item.name, params: item.params });
-	else await router.push({ name: item.name, query: item.query });
-	stores.setCurrenFullscreen(true);
-};
-// 当前项右键菜单点击，拿 `当前点击的路由路径` 对比 `tagsView 路由数组`，取当前点击项的详细路由信息
-// 防止 tagsView 非当前页演示时，操作异常
-// https://gitee.com/lyt-top/vue-next-admin/issues/I61VS9
-const getCurrentRouteItem = (item) => {
-	let resItem = {};
-	state.tagsViewList.forEach((v) => {
-		v.transUrl = transUrlParams(v);
-		if (v.transUrl) {
-			// 动态路由、普通路由带参数
-			if (v.transUrl === transUrlParams(v) && v.transUrl === item.commonUrl) resItem = v;
-		} else {
-			// 路由不带参数
-			if (v.path === decodeURI(item.path)) resItem = v;
-		}
-	});
-	if (!resItem) return null;
-	else return resItem;
-};
+// // 2、刷新当前 tagsView：
+// const refreshCurrentTagsView = async (fullPath) => {
+// 	const decodeURIPath = decodeURI(fullPath);
+// 	let item = {};
+// 	state.tagsViewList.forEach((v) => {
+// 		v.transUrl = transUrlParams(v);
+// 		if (v.transUrl) {
+// 			if (v.transUrl === transUrlParams(v)) item = v;
+// 		} else {
+// 			if (v.path === decodeURIPath) item = v;
+// 		}
+// 	});
+// 	if (!item) return false;
+// 	await storesKeepALiveNames.delCachedView(item);
+// 	mittBus.emit('onTagsViewRefreshRouterView', fullPath);
+// 	if (item.meta?.isKeepAlive) storesKeepALiveNames.addCachedView(item);
+// };
+// // 3、关闭当前 tagsView：如果是设置了固定的（isAffix），不可以关闭
+// const closeCurrentTagsView = (path) => {
+// 	state.tagsViewList.map((v, k, arr) => {
+// 		if (!v.meta?.isAffix) {
+// 			if (getsettingsConfig.value.isShareTagsView ? v.path === path : v.url === path) {
+// 				storesKeepALiveNames.delCachedView(v);
+// 				state.tagsViewList.splice(k, 1);
+// 				setTimeout(() => {
+// 					if (state.tagsViewList.length === k && getsettingsConfig.value.isShareTagsView ? state.routePath === path : state.routeActive === path) {
+// 						// 最后一个且高亮时
+// 						if (arr[arr.length - 1].meta.isDynamic) {
+// 							// 动态路由（xxx/:id/:name"）
+// 							if (k !== arr.length) router.push({ name: arr[k].name, params: arr[k].params });
+// 							else router.push({ name: arr[arr.length - 1].name, params: arr[arr.length - 1].params });
+// 						} else {
+// 							// 普通路由
+// 							if (k !== arr.length) router.push({ path: arr[k].path, query: arr[k].query });
+// 							else router.push({ path: arr[arr.length - 1].path, query: arr[arr.length - 1].query });
+// 						}
+// 					} else {
+// 						// 非最后一个且高亮时，跳转到下一个
+// 						if (state.tagsViewList.length !== k && getsettingsConfig.value.isShareTagsView ? state.routePath === path : state.routeActive === path) {
+// 							if (arr[k].meta.isDynamic) {
+// 								// 动态路由（xxx/:id/:name"）
+// 								router.push({ name: arr[k].name, params: arr[k].params });
+// 							} else {
+// 								// 普通路由
+// 								router.push({ path: arr[k].path, query: arr[k].query });
+// 							}
+// 						}
+// 					}
+// 				}, 0);
+// 			}
+// 		}
+// 	});
+// 	addBrowserSetSession(state.tagsViewList);
+// };
+// // 4、关闭其它 tagsView：如果是设置了固定的（isAffix），不进行关闭
+// const closeOtherTagsView = (path) => {
+// 	if (Session.get('tagsViewList')) {
+// 		state.tagsViewList = [];
+// 		Session.get('tagsViewList').map((v) => {
+// 			if (v.meta?.isAffix && !v.meta.isHide) {
+// 				v.url = setTagsViewHighlight(v);
+// 				storesKeepALiveNames.delOthersCachedViews(v);
+// 				state.tagsViewList.push({ ...v });
+// 			}
+// 		});
+// 		addTagsView(path, route);
+// 		addBrowserSetSession(state.tagsViewList);
+// 	}
+// };
+// // 5、关闭全部 tagsView：如果是设置了固定的（isAffix），不进行关闭
+// const closeAllTagsView = () => {
+// 	if (Session.get('tagsViewList')) {
+// 		storesKeepALiveNames.delAllCachedViews();
+// 		state.tagsViewList = [];
+// 		Session.get('tagsViewList').map((v) => {
+// 			if (v.meta?.isAffix && !v.meta.isHide) {
+// 				v.url = setTagsViewHighlight(v);
+// 				state.tagsViewList.push({ ...v });
+// 				router.push({ path: state.tagsViewList[state.tagsViewList.length - 1].path });
+// 			}
+// 		});
+// 		addBrowserSetSession(state.tagsViewList);
+// 	}
+// };
+// // 6、开启当前页面全屏
+// const openCurrenFullscreen = async (path) => {
+// 	const item = state.tagsViewList.find((v) => (getsettingsConfig.value.isShareTagsView ? v.path === path : v.url === path));
+// 	if (item.meta.isDynamic) await router.push({ name: item.name, params: item.params });
+// 	else await router.push({ name: item.name, query: item.query });
+// 	stores.setCurrenFullscreen(true);
+// };
+// // 当前项右键菜单点击，拿 `当前点击的路由路径` 对比 `tagsView 路由数组`，取当前点击项的详细路由信息
+// // 防止 tagsView 非当前页演示时，操作异常
+// // https://gitee.com/lyt-top/vue-next-admin/issues/I61VS9
+// const getCurrentRouteItem = (item) => {
+// 	let resItem = {};
+// 	state.tagsViewList.forEach((v) => {
+// 		v.transUrl = transUrlParams(v);
+// 		if (v.transUrl) {
+// 			// 动态路由、普通路由带参数
+// 			if (v.transUrl === transUrlParams(v) && v.transUrl === item.commonUrl) resItem = v;
+// 		} else {
+// 			// 路由不带参数
+// 			if (v.path === decodeURI(item.path)) resItem = v;
+// 		}
+// 	});
+// 	if (!resItem) return null;
+// 	else return resItem;
+// };
 // 当前项右键菜单点击
 const onCurrentContextmenuClick = async (item) => {
 	item.commonUrl = transUrlParams(item);
@@ -348,7 +315,7 @@ const onCurrentContextmenuClick = async (item) => {
 			break;
 		case 1:
 			// 关闭当前
-			closeCurrentTagsView(getThemeConfig.value.isShareTagsView ? path : url);
+			closeCurrentTagsView(getsettingsConfig.value.isShareTagsView ? path : url);
 			break;
 		case 2:
 			// 关闭其它
@@ -362,7 +329,7 @@ const onCurrentContextmenuClick = async (item) => {
 			break;
 		case 4:
 			// 开启当前页面全屏
-			openCurrenFullscreen(getThemeConfig.value.isShareTagsView ? path : url);
+			openCurrenFullscreen(getsettingsConfig.value.isShareTagsView ? path : url);
 			break;
 	}
 };
@@ -371,7 +338,7 @@ const onContextmenu = (v, e) => {
 	const { clientX, clientY } = e;
 	state.dropdown.x = clientX;
 	state.dropdown.y = clientY;
-	contextmenuRef.value.openContextmenu(v);
+	// contextmenuRef.value.openContextmenu(v);
 };
 // 鼠标按下时，判断是鼠标中键就关闭当前 tasgview
 const onMousedownMenu = (v, e) => {
@@ -380,43 +347,43 @@ const onMousedownMenu = (v, e) => {
 		onCurrentContextmenuClick(item);
 	}
 };
-// 当前的 tagsView 项点击时
-const onTagsClick = (v, k) => {
-	state.tagsRefsIndex = k;
-	router.push(v);
-	// 分栏布局时，收起/展开菜单
-	if (getThemeConfig.value.layout === 'columns') {
-		const item = routesList.value.find((r) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);
-		!item.children ? (getThemeConfig.value.isCollapse = true) : (getThemeConfig.value.isCollapse = false);
-	}
-};
-// 处理 url，地址栏链接有参数时，tagsview 右键菜单刷新功能失效问题，感谢 @ZzZz-RIPPER、@dejavuuuuu
-// https://gitee.com/lyt-top/vue-next-admin/issues/I5K3YO
-// https://gitee.com/lyt-top/vue-next-admin/issues/I61VS9
-const transUrlParams = (v) => {
-	let params = v.query && Object.keys(v.query).length > 0 ? v.query : v.params;
-	if (!params) return '';
-	let path = '';
-	for (let [key, value] of Object.entries(params)) {
-		if (v.meta?.isDynamic) path += `/${value}`;
-		else path += `&${key}=${value}`;
-	}
-	// 判断是否是动态路由（xxx/:id/:name"）isDynamic
-	if (v.meta?.isDynamic) {
-		/**
-		 *
-		 * isFnClick 用于判断是通过方法调用，还是直接右键菜单点击（此处只针对动态路由）
-		 * 原因：
-		 * 1、右键菜单点击时，路由的 path 还是原始定义的路由格式，如：/params/dynamic/details/:t/:id/:tagsViewName
-		 * 2、通过事件调用时，路由的 path 不是原始定义的路由格式，如：/params/dynamic/details/vue-next-admin/111/我是动态路由测试tagsViewName(非国际化)
-		 *
-		 * 所以右侧菜单点击时，需要处理路径拼接 v.path.split(':')[0]，得到路径 + 参数的完整路径
-		 */
-		return v.isFnClick ? decodeURI(v.path) : `${v.path.split(':')[0]}${path.replace(/^\//, '')}`;
-	} else {
-		return `${v.path}${path.replace(/^&/, '?')}`;
-	}
-};
+// // 当前的 tagsView 项点击时
+// const onTagsClick = (v, k) => {
+// 	state.tagsRefsIndex = k;
+// 	router.push(v);
+// 	// 分栏布局时，收起/展开菜单
+// 	if (getsettingsConfig.value.layout === 'columns') {
+// 		const item = routesList.value.find((r) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);
+// 		!item.children ? (getsettingsConfig.value.isCollapse = true) : (getsettingsConfig.value.isCollapse = false);
+// 	}
+// };
+// // 处理 url，地址栏链接有参数时，tagsview 右键菜单刷新功能失效问题，感谢 @ZzZz-RIPPER、@dejavuuuuu
+// // https://gitee.com/lyt-top/vue-next-admin/issues/I5K3YO
+// // https://gitee.com/lyt-top/vue-next-admin/issues/I61VS9
+// const transUrlParams = (v) => {
+// 	let params = v.query && Object.keys(v.query).length > 0 ? v.query : v.params;
+// 	if (!params) return '';
+// 	let path = '';
+// 	for (let [key, value] of Object.entries(params)) {
+// 		if (v.meta?.isDynamic) path += `/${value}`;
+// 		else path += `&${key}=${value}`;
+// 	}
+// 	// 判断是否是动态路由（xxx/:id/:name"）isDynamic
+// 	if (v.meta?.isDynamic) {
+// 		/**
+// 		 *
+// 		 * isFnClick 用于判断是通过方法调用，还是直接右键菜单点击（此处只针对动态路由）
+// 		 * 原因：
+// 		 * 1、右键菜单点击时，路由的 path 还是原始定义的路由格式，如：/params/dynamic/details/:t/:id/:tagsViewName
+// 		 * 2、通过事件调用时，路由的 path 不是原始定义的路由格式，如：/params/dynamic/details/vue-next-admin/111/我是动态路由测试tagsViewName(非国际化)
+// 		 *
+// 		 * 所以右侧菜单点击时，需要处理路径拼接 v.path.split(':')[0]，得到路径 + 参数的完整路径
+// 		 */
+// 		return v.isFnClick ? decodeURI(v.path) : `${v.path.split(':')[0]}${path.replace(/^\//, '')}`;
+// 	} else {
+// 		return `${v.path}${path.replace(/^&/, '?')}`;
+// 	}
+// };
 // 处理 tagsView 高亮（多标签详情时使用，单标签详情未使用）
 const setTagsViewHighlight = (v) => {
 	let params = v.query && Object.keys(v.query).length > 0 ? v.query : v.params;
@@ -490,7 +457,7 @@ const getTagsRefsIndex = (path) => {
 		// await 使用该写法，防止拿取不到 tagsViewList 列表数据不完整
 		let tagsViewList = await state.tagsViewList;
 		state.tagsRefsIndex = tagsViewList.findIndex((v) => {
-			if (getThemeConfig.value.isShareTagsView) {
+			if (getsettingsConfig.value.isShareTagsView) {
 				return v.path === path;
 			} else {
 				return v.url === path;
@@ -508,7 +475,7 @@ const initSortable = async () => {
 	state.sortable = Sortable.create(el, {
 		animation: 300,
 		dataIdAttr: 'data-url',
-		disabled: getThemeConfig.value.isSortableTagsView ? false : true,
+		disabled: getsettingsConfig.value.isSortableTagsView ? false : true,
 		onEnd: () => {
 			const sortEndList = [];
 			state.sortable.toArray().map((val) => {
@@ -520,80 +487,63 @@ const initSortable = async () => {
 		},
 	});
 };
-// 拖动问题，https://gitee.com/lyt-top/vue-next-admin/issues/I3ZRRI
-const onSortableResize = async () => {
-	await initSortable();
-	if (other.isMobile()) state.sortable.el && state.sortable.destroy();
-};
-// 页面加载前
-onBeforeMount(() => {
-	// 初始化，防止手机端直接访问时还可以拖拽
-	onSortableResize();
-	// 拖动问题，https://gitee.com/lyt-top/vue-next-admin/issues/I3ZRRI
-	window.addEventListener('resize', onSortableResize);
-	// 监听非本页面调用 0 刷新当前，1 关闭当前，2 关闭其它，3 关闭全部 4 当前页全屏
-	mittBus.on('onCurrentContextmenuClick', (data) => {
-		// 通过方法点击关闭 tagsView
-		data.isFnClick = true;
-		onCurrentContextmenuClick(data);
-	});
-	// 监听布局配置界面开启/关闭拖拽
-	mittBus.on('openOrCloseSortable', () => {
-		initSortable();
-	});
-	// 监听布局配置开启 TagsView 共用，为了演示还原默认值
-	mittBus.on('openShareTagsView', () => {
-		if (getThemeConfig.value.isShareTagsView) {
-			router.push('/home');
-			state.tagsViewList = [];
-			state.tagsViewRoutesList.map((v) => {
-				if (v.meta?.isAffix && !v.meta.isHide) {
-					v.url = setTagsViewHighlight(v);
-					state.tagsViewList.push({ ...v });
-				}
-			});
-		}
-	});
-});
-// 页面卸载时
-onUnmounted(() => {
-	// 取消非本页面调用监听
-	mittBus.off('onCurrentContextmenuClick', () => {});
-	// 取消监听布局配置界面开启/关闭拖拽
-	mittBus.off('openOrCloseSortable', () => {});
-	// 取消监听布局配置开启 TagsView 共用
-	mittBus.off('openShareTagsView', () => {});
-	// 取消窗口 resize 监听
-	window.removeEventListener('resize', onSortableResize);
-});
-// 页面更新时
-onBeforeUpdate(() => {
-	tagsRefs.value = [];
-});
+
 // 页面加载时
 onMounted(() => {
-	// 初始化 pinia 中的 tagsViewRoutes 列表
-	getTagsViewRoutes();
-	initSortable();
+	initTags()
 });
-// 路由更新时（组件内生命钩子）
-onBeforeRouteUpdate(async (to) => {
-	state.routeActive = setTagsViewHighlight(to);
-	state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
-	await addTagsView(to.path,to);
-	getTagsRefsIndex(getThemeConfig.value.isShareTagsView ? state.routePath : state.routeActive);
-});
-// 监听路由的变化，动态赋值给 tagsView
-watch(
-	() => tagsViewRoutes.value,
-	(val) => {
-		if (val.length === state.tagsViewRoutesList.length) return false;
-		getTagsViewRoutes();
-	},
-	{
-		deep: true,
+const affixTags = ref([]);
+function initTags() {
+	const res = filterAffixTags(routes.value);
+	affixTags.value = res;
+	for (const tag of res) {
+		// Must have tag name
+		console.log("cccccccccc", tag);
+		if (tag.name) {
+			useTagsViewStore().addVisitedView(tag)
+		}
 	}
-);
+}
+function filterAffixTags(routes, basePath = '') {
+	let tags = []
+	routes.forEach(route => {
+		if (route.meta && route.meta.affix) {
+			const tagPath = getNormalPath(basePath + '/' + route.path)
+			tags.push({
+				fullPath: tagPath,
+				path: tagPath,
+				name: route.name,
+				meta: { ...route.meta }
+			})
+		}
+		if (route.children) {
+			const tempTags = filterAffixTags(route.children, route.path)
+			if (tempTags.length >= 1) {
+				tags = [...tags, ...tempTags]
+			}
+		}
+	})
+	return tags
+}
+
+// // 路由更新时（组件内生命钩子）
+// onBeforeRouteUpdate(async (to) => {
+// 	state.routeActive = setTagsViewHighlight(to);
+// 	state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
+// 	await addTagsView(to.path,to);
+// 	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+// });
+// // 监听路由的变化，动态赋值给 tagsView
+// watch(
+// 	() => tagsViewRoutes.value,
+// 	(val) => {
+// 		if (val.length === state.tagsViewRoutesList.length) return false;
+// 		getTagsViewRoutes();
+// 	},
+// 	{
+// 		deep: true,
+// 	}
+// );
 </script>
 
 <style scoped lang="scss">
@@ -602,9 +552,11 @@ watch(
 	border-bottom: 1px solid var(--next-border-color-light);
 	position: relative;
 	z-index: 4;
+
 	:deep(.el-scrollbar__wrap) {
 		overflow-x: auto !important;
 	}
+
 	&-ul {
 		list-style: none;
 		margin: 0;
@@ -616,6 +568,7 @@ watch(
 		font-size: 12px;
 		white-space: nowrap;
 		padding: 0 15px;
+
 		&-li {
 			height: 26px;
 			line-height: 26px;
@@ -629,16 +582,19 @@ watch(
 			z-index: 0;
 			cursor: pointer;
 			justify-content: space-between;
+
 			&:hover {
 				background-color: var(--el-color-primary-light-9);
 				color: var(--el-color-primary);
 				border-color: var(--el-color-primary-light-5);
 			}
+
 			&-iconfont {
 				position: relative;
 				left: -5px;
 				font-size: 12px;
 			}
+
 			&-icon {
 				border-radius: 100%;
 				position: relative;
@@ -647,18 +603,22 @@ watch(
 				text-align: center;
 				line-height: 14px;
 				right: -5px;
+
 				&:hover {
 					color: var(--el-color-white);
 					background-color: var(--el-color-primary-light-3);
 				}
 			}
+
 			.layout-icon-active {
 				display: block;
 			}
+
 			.layout-icon-three {
 				display: none;
 			}
 		}
+
 		.is-active {
 			color: var(--el-color-white);
 			background: var(--el-color-primary);
@@ -666,6 +626,7 @@ watch(
 			transition: border-color 3s ease;
 		}
 	}
+
 	// 风格4
 	.tags-style-four {
 		.layout-navbars-tagsview-ul-li {
@@ -673,24 +634,30 @@ watch(
 			border: none !important;
 			position: relative;
 			border-radius: 3px !important;
+
 			.layout-icon-active {
 				display: none;
 			}
+
 			.layout-icon-three {
 				display: block;
 			}
+
 			&:hover {
 				background: none !important;
 			}
 		}
+
 		.is-active {
 			background: none !important;
 			color: var(--el-color-primary) !important;
 		}
 	}
+
 	// 风格5
 	.tags-style-five {
 		align-items: flex-end;
+
 		.tags-style-five-svg {
 			-webkit-mask-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0ibm9uZSI+CgogPGc+CiAgPHRpdGxlPkxheWVyIDE8L3RpdGxlPgogIDxwYXRoIHRyYW5zZm9ybT0icm90YXRlKC0wLjEzMzUwNiA1MC4xMTkyIDUwKSIgaWQ9InN2Z18xIiBkPSJtMTAwLjExOTE5LDEwMGMtNTUuMjI4LDAgLTEwMCwtNDQuNzcyIC0xMDAsLTEwMGwwLDEwMGwxMDAsMHoiIG9wYWNpdHk9InVuZGVmaW5lZCIgc3Ryb2tlPSJudWxsIiBmaWxsPSIjRjhFQUU3Ii8+CiAgPHBhdGggZD0ibS0wLjYzNzY2LDcuMzEyMjhjMC4xMTkxOSwwIDAuMjE3MzcsMC4wNTc5NiAwLjQ3Njc2LDAuMTE5MTljMC4yMzIsMC4wNTQ3NyAwLjI3MzI5LDAuMDM0OTEgMC4zNTc1NywwLjExOTE5YzAuMDg0MjgsMC4wODQyOCAwLjM1NzU3LDAgMC40NzY3NiwwbDAuMTE5MTksMGwwLjIzODM4LDAiIGlkPSJzdmdfMiIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0ibTI4LjkyMTM0LDY5LjA1MjQ0YzAsMC4xMTkxOSAwLDAuMjM4MzggMCwwLjM1NzU3bDAsMC4xMTkxOWwwLDAuMTE5MTkiIGlkPSJzdmdfMyIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHJlY3QgaWQ9InN2Z180IiBoZWlnaHQ9IjAiIHdpZHRoPSIxLjMxMTA4IiB5PSI2LjgzNTUyIiB4PSItMC4wNDE3MSIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHJlY3QgaWQ9InN2Z181IiBoZWlnaHQ9IjEuNzg3ODQiIHdpZHRoPSIwLjExOTE5IiB5PSI2OC40NTY1IiB4PSIyOC45MjEzNCIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiAgPHJlY3QgaWQ9InN2Z182IiBoZWlnaHQ9IjQuODg2NzciIHdpZHRoPSIxOS4wNzAzMiIgeT0iNTEuMjkzMjEiIHg9IjM2LjY2ODY2IiBzdHJva2U9Im51bGwiIGZpbGw9Im5vbmUiLz4KIDwvZz4KPC9zdmc+'),
 				url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNzAiIGhlaWdodD0iNzAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZmlsbD0ibm9uZSI+CiA8Zz4KICA8dGl0bGU+TGF5ZXIgMTwvdGl0bGU+CiAgPHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTg5Ljc2MjQgNy4zMzAxNCA1NS4xMjUyKSIgc3Ryb2tlPSJudWxsIiBpZD0ic3ZnXzEiIGZpbGw9IiNGOEVBRTciIGQ9Im02Mi41NzQ0OSwxMTcuNTIwODZjLTU1LjIyOCwwIC0xMDAsLTQ0Ljc3MiAtMTAwLC0xMDBsMCwxMDBsMTAwLDB6IiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogIDxwYXRoIGQ9Im0tMC42Mzc2Niw3LjMxMjI4YzAuMTE5MTksMCAwLjIxNzM3LDAuMDU3OTYgMC40NzY3NiwwLjExOTE5YzAuMjMyLDAuMDU0NzcgMC4yNzMyOSwwLjAzNDkxIDAuMzU3NTcsMC4xMTkxOWMwLjA4NDI4LDAuMDg0MjggMC4zNTc1NywwIDAuNDc2NzYsMGwwLjExOTE5LDBsMC4yMzgzOCwwIiBpZD0ic3ZnXzIiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxwYXRoIGQ9Im0yOC45MjEzNCw2OS4wNTI0NGMwLDAuMTE5MTkgMCwwLjIzODM4IDAsMC4zNTc1N2wwLDAuMTE5MTlsMCwwLjExOTE5IiBpZD0ic3ZnXzMiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IGlkPSJzdmdfNCIgaGVpZ2h0PSIwIiB3aWR0aD0iMS4zMTEwOCIgeT0iNi44MzU1MiIgeD0iLTAuMDQxNzEiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IGlkPSJzdmdfNSIgaGVpZ2h0PSIxLjc4Nzg0IiB3aWR0aD0iMC4xMTkxOSIgeT0iNjguNDU2NSIgeD0iMjguOTIxMzQiIHN0cm9rZT0ibnVsbCIgZmlsbD0ibm9uZSIvPgogIDxyZWN0IGlkPSJzdmdfNiIgaGVpZ2h0PSI0Ljg4Njc3IiB3aWR0aD0iMTkuMDcwMzIiIHk9IjUxLjI5MzIxIiB4PSIzNi42Njg2NiIgc3Ryb2tlPSJudWxsIiBmaWxsPSJub25lIi8+CiA8L2c+Cjwvc3ZnPg=='),
@@ -699,26 +666,31 @@ watch(
 			-webkit-mask-position: right bottom, left bottom, center top;
 			-webkit-mask-repeat: no-repeat;
 		}
+
 		.layout-navbars-tagsview-ul-li {
 			padding: 0 5px;
 			border-width: 15px 27px 15px;
 			border-style: solid;
 			border-color: transparent;
 			margin: 0 -15px;
+
 			.layout-icon-active,
 			.layout-navbars-tagsview-ul-li-iconfont,
 			.layout-navbars-tagsview-ul-li-refresh {
 				display: none;
 			}
+
 			.layout-icon-three {
 				display: block;
 			}
+
 			&:hover {
 				@extend .tags-style-five-svg;
 				background: var(--el-color-primary-light-9);
 				color: unset;
 			}
 		}
+
 		.is-active {
 			@extend .tags-style-five-svg;
 			background: var(--el-color-primary-light-9) !important;
@@ -727,6 +699,7 @@ watch(
 		}
 	}
 }
+
 .layout-navbars-tagsview-shadow {
 	box-shadow: rgb(0 21 41 / 4%) 0px 1px 4px;
 }
