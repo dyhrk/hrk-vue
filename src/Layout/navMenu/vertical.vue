@@ -1,6 +1,6 @@
 <template>
 	<el-menu :default-active="activeMenu" background-color="transparent" :collapse="isCollapse" :unique-opened="true"
-		:collapse-transition="false" :active-text-color="theme">
+		:collapse-transition="false">
 		<sidebar-item
           v-for="(route, index) in sidebarRouters"
           :key="route.path + index"

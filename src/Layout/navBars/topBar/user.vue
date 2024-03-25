@@ -71,6 +71,7 @@
 </template>
 
 <script setup name="layoutBreadcrumbUser">
+import screenfull from 'screenfull';
 import useSettingsStore from '@/store/modules/settings';
 // import { useRoutesList } from '/@/stores/routesList';
 import useUserStore from '@/store/modules/user'
@@ -84,7 +85,7 @@ const { settingsConfig } = storeToRefs(settingsStore);
 const userNewsRef = ref();
 // 消息通知点击时
 const onUserNewsClick = () => {
-	unref(userNewsRef).popperRef?.delayHide?.();
+	// unref(userNewsRef).popperRef?.delayHide?.();
 };
 
 const state = reactive({
