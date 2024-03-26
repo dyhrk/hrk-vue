@@ -1,7 +1,8 @@
 <template>
    <div class="app-container">
+    <el-card>
       <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true" label-width="68px">
-         <el-form-item label="角色名称" prop="roleName">
+         <el-form-item label="角色名称" style="margin-bottom: 0;" prop="roleName">
             <el-input
                v-model="queryParams.roleName"
                placeholder="请输入角色名称"
@@ -10,7 +11,7 @@
                @keyup.enter="handleQuery"
             />
          </el-form-item>
-         <el-form-item label="权限字符" prop="roleKey">
+         <el-form-item label="权限字符" style="margin-bottom: 0;" prop="roleKey">
             <el-input
                v-model="queryParams.roleKey"
                placeholder="请输入权限字符"
@@ -19,7 +20,7 @@
                @keyup.enter="handleQuery"
             />
          </el-form-item>
-         <el-form-item label="状态" prop="status">
+         <el-form-item label="状态" style="margin-bottom: 0;" prop="status">
             <el-select
                v-model="queryParams.status"
                placeholder="角色状态"
@@ -34,7 +35,7 @@
                />
             </el-select>
          </el-form-item>
-         <el-form-item label="创建时间" style="width: 308px">
+         <el-form-item label="创建时间" style="margin-bottom: 0;width: 308px">
             <el-date-picker
                v-model="dateRange"
                value-format="YYYY-MM-DD"
@@ -49,7 +50,7 @@
             <el-button icon="Refresh" @click="resetQuery">重置</el-button>
          </el-form-item>
       </el-form>
-      <el-row :gutter="10" class="mb8">
+      <!-- <el-row :gutter="10" class="mb8">
          <el-col :span="1.5">
             <el-button
                type="primary"
@@ -89,7 +90,8 @@
             >导出</el-button>
          </el-col>
          <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
-      </el-row>
+      </el-row> -->
+      </el-card>
 
       <!-- 表格数据 -->
       <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">

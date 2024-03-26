@@ -10,6 +10,8 @@ import router from './router'
 import other from '@/utils/other';
 import { useDict } from '@/utils/dict'
 import directive from './directive' // directive
+// 分页组件
+import Pagination from '@/components/Pagination'
 import elementIcons from '@/components/SvgIcon/svgicon'
 import RightToolbar from '@/components/RightToolbar'
 
@@ -31,6 +33,7 @@ app.config.globalProperties.resetForm = resetForm
 // 全局组件挂载
 app.component('DictTag', DictTag)
 app.component('RightToolbar', RightToolbar)
+app.component('Pagination', Pagination)
 app.use(plugins)
 directive(app)
 other.elSvg(app);

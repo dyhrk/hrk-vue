@@ -24,9 +24,6 @@ import useTagsViewRoutes from '@/store/modules/tagsViewRoutes';
 const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
 
-
-
-
 // 引入组件
 const LayoutParentView = defineAsyncComponent(() => import('@/Layout/routerView/parent.vue'));
 // const LayoutFooter = defineAsyncComponent(() => import('@/Layout/footer/index.vue'));
@@ -52,7 +49,7 @@ const setBacktopClass = computed(() => {
 });
 // 设置主内容区的高度
 const setMainHeight = computed(() => {
-	if (isTagsViewCurrenFull.value) return '0px';
+	// if (isTagsViewCurrenFull.value) return '0px';
 	const { isTagsview, layout } = settingsConfig.value;
 	if (isTagsview && layout !== 'classic') return '85px';
 	else return '51px';

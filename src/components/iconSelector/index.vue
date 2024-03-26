@@ -190,7 +190,6 @@ const onColClick = (v) => {
 	state.fontIconPlaceholder = v;
 	state.fontIconPrefix = v;
 	emits('update:modelValue', state.fontIconPrefix);
-	console.log(state.fontIconPrefix);
 	inputWidthRef.value.focus();
 };
 // 清空当前点击的 icon 图标

@@ -84,7 +84,6 @@ import { getNormalPath } from '@/utils/lamb'
 const routes = computed(() => usePermissionStore().routes);
 // 动态设置 tagsView 风格样式
 const setTagsStyle = computed(() => {
-	console.log("settingsConfig.value.tagsStyle",settingsConfig.value.tagsStyle,settingsConfig.value);
 	return settingsConfig.value.tagsStyle;
 });
 // 获取布局配置信息
@@ -183,11 +182,9 @@ const singleAddTagsView = (path, to) => {
 const addTagsView = (path, to) => {
 	const { name } = route
 	if (name) {
-		console.log(route);
 		useTagsViewStore().addView(route)
 		if (route.meta.link) {
 			useTagsViewStore().addIframeView(route);
-			console.log(route.meta.link);
 		}
 	}
 	return false
@@ -498,7 +495,6 @@ function initTags() {
 	affixTags.value = res;
 	for (const tag of res) {
 		// Must have tag name
-		console.log("cccccccccc", tag);
 		if (tag.name) {
 			useTagsViewStore().addVisitedView(tag)
 		}

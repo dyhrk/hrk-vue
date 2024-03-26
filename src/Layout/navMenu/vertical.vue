@@ -35,7 +35,6 @@ const activeMenu = computed(() => {
 // 设置 tagsView 高亮
 const isActive = (v) => {
 	// if (getThemeConfig.value.isShareTagsView) {
-		console.log(v.path,activeMenu.value);
 		return v.path === activeMenu.value;
 	// } else {
 	// 	if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
