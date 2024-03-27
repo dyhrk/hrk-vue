@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container layout-padding w100">
     <div class="queryCard">
       <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true" label-width="100px">
         <el-form-item label="角色名称:" prop="roleName" class="mb20" >
@@ -23,12 +23,11 @@
           <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
           <el-button icon="Refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
-
       </el-form>
 
-    </div>
+    </div >
     <!-- 表格数据 -->
-    <el-card>
+    <el-card style="height: 100%;">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <el-button type="primary" plain icon="Plus"  @click="handleAdd"
@@ -44,7 +43,7 @@
         </el-col>
       </el-row>
 
-      <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="roleList" style="height: 100%;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="角色编号" prop="roleId" />
         <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" />

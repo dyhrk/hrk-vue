@@ -1,5 +1,5 @@
 <template>
-	<section class="app-main">
+	<section class="layout-parent">
 	  <router-view v-slot="{ Component, route }">
 		<transition name="fade-transform" mode="out-in">
 		  <keep-alive :include="tagsViewStore.cachedViews">
@@ -19,15 +19,8 @@
   </script>
   
   <style lang="scss" scoped>
-  .app-main {
-	/* 50= navbar  50  */
-	height: 100%;
-	width: 100%;
-	position: relative;
-	overflow: hidden;
-  }
   
-  .fixed-header + .app-main {
+  .fixed-header + .layout-parent {
 	padding-top: 50px;
   }
 
