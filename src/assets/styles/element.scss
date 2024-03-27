@@ -32,6 +32,7 @@
 
 		.el-dialog {
 			margin: 0 auto !important;
+			padding: 0;
 			position: absolute;
 
 			.el-dialog__body {
@@ -41,6 +42,18 @@
 	}
 }
 
+.el-dialog__header {
+	padding: var(--el-dialog-padding-primary);
+	padding-bottom: 10px !important;
+	margin-right: 16px;
+}
+
+.el-dialog__footer {
+	padding: var(--el-dialog-padding-primary);
+	padding-top: 10px;
+	text-align: right;
+	box-sizing: border-box;
+}
 
 /* NavMenu 导航菜单
 ------------------------------- */
@@ -209,28 +222,24 @@
 /* Form 表单
 ------------------------------- */
 .el-form {
-
-	// // 用于修改弹窗时表单内容间隔太大问题，如系统设置的新增菜单弹窗里的表单内容
-	// .el-form-item:last-of-type {
-	// 	margin-bottom: 0 !important;
-	// }
-
+	// 用于修改弹窗时表单内容间隔太大问题，如系统设置的新增菜单弹窗里的表单内容
+	.el-form-item:last-of-type {
+		
+	}
 	// 修复行内表单最后一个 el-form-item 位置下移问题
-	// &.el-form--inline {
-	// 	.el-form-item--large.el-form-item:last-of-type {
-	// 		margin-bottom: 22px !important;
-	// 	}
-
-	// 	.el-form-item--default.el-form-item:last-of-type,
-	// 	.el-form-item--small.el-form-item:last-of-type {
-	// 		margin-bottom: 18px !important;
-	// 	}
-	// }
-
-	// // https://gitee.com/lyt-top/vue-next-admin/issues/I5K1PM
-	// .el-form-item .el-form-item__label .el-icon {
-	// 	margin-right: 0px;
-	// }
+	&.el-form--inline {
+		.el-form-item--large.el-form-item:last-of-type {
+			// margin-bottom: 22px !important;
+		}
+		.el-form-item--default.el-form-item:last-of-type,
+		.el-form-item--small.el-form-item:last-of-type {
+			// margin-bottom: 18px !important;
+		}
+	}
+	// https://gitee.com/lyt-top/vue-next-admin/issues/I5K1PM
+	.el-form-item .el-form-item__label .el-icon {
+		margin-right: 0px;
+	}
 }
 
 .el-dialog__body {
@@ -263,9 +272,10 @@
 
 .queryCard {
 	background-color: #fff;
-	padding: 15px 10px 15px 10px;
+	padding: 20px 10px 0 10px;
 	margin-bottom: 20px;
 	border-radius: 4px;
+
 	.el-form-item {
 		margin: 0;
 	}

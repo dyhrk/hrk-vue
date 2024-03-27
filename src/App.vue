@@ -19,7 +19,8 @@ const language = ref('zh-cn')
 const route = useRoute();
 // 获取全局组件大小
 const getGlobalComponentSize = computed(() => {
-  return other.globalComponentSize();
+  // return other.globalComponentSize();
+  return "default"
 });
 
 // 获取全局 i18n

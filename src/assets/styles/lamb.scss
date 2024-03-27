@@ -1,0 +1,23 @@
+/* tree border */
+.tree-border {
+    margin-top: 5px;
+    border: 1px solid #e5e6e7;
+    background: #FFFFFF none;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.pagination-container .el-pagination {
+    right: 0;
+    position: absolute;
+}
+
+@media (max-width : 768px) {
+    .pagination-container .el-pagination>.el-pagination__jump {
+        display: none !important;
+    }
+
+    .pagination-container .el-pagination>.el-pagination__sizes {
+        display: none !important;
+    }
+}
