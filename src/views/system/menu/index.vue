@@ -1,88 +1,81 @@
 <template>
-   <div class="app-container">
-      <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
-         <el-form-item label="菜单名称" prop="menuName">
-            <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable style="width: 200px"
-               @keyup.enter="handleQuery" />
-         </el-form-item>
-         <el-form-item label="状态" prop="status">
-            <el-select v-model="queryParams.status" placeholder="菜单状态" clearable style="width: 200px">
-               <el-option v-for="dict in sys_normal_disable" :key="dict.value" :label="dict.label"
-                  :value="dict.value" />
-            </el-select>
-         </el-form-item>
-         <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-         </el-form-item>
-      </el-form>
+   <div class="app-container layout-padding w100">
+      <div class="queryCard">
+         <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
+            <el-form-item label="菜单名称" prop="menuName">
+               <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable style="width: 200px"
+                  @keyup.enter="handleQuery" />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+               <el-select v-model="queryParams.status" placeholder="菜单状态" clearable style="width: 200px">
+                  <el-option v-for="dict in sys_normal_disable" :key="dict.value" :label="dict.label"
+                     :value="dict.value" />
+               </el-select>
+            </el-form-item>
+            <el-form-item>
+               <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+               <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+         </el-form>
+      </div>
+      <el-card>
+         <el-row :gutter="10" class="mb8">
+            <el-col :span="1.5">
+               <el-button type="primary" plain icon="Plus" @click="handleAdd">新增</el-button>
+            </el-col>
+            <el-col :span="1.5">
+               <el-button type="info" plain icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
+            </el-col>
+            <!-- <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar> -->
+         </el-row>
 
-      <el-row :gutter="10" class="mb8">
-         <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd"
-            >新增</el-button>
-         </el-col>
-         <el-col :span="1.5">
-            <el-button type="info" plain icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
-         </el-col>
-         <!-- <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar> -->
-      </el-row>
-
-      <el-table v-if="refreshTable" v-loading="loading" :data="menuList" row-key="menuId"
-         :default-expand-all="isExpandAll" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-         <el-table-column prop="menuName" label="菜单名称" :show-overflow-tooltip="true" width="160">
-            <template #default="scope">
-						<SvgIcon :name="scope.row.icon" />
-						<span class="ml10">{{ scope.row.menuName }}</span>
-					</template>
-         </el-table-column>
-         <!-- <el-table-column prop="icon" label="图标" align="center" width="100">
-            <template #default="scope">
-               <svg-icon :icon-class="scope.row.icon" />
-            </template>
-         </el-table-column> -->
-         <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
-         <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
-         <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-         <el-table-column prop="status" label="状态" width="80">
-            <template #default="scope">
-               <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
-            </template>
-         </el-table-column>
-         <el-table-column label="操作" align="center" width="210" class-name="small-padding fixed-width">
-            <template #default="scope">
-               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
-               <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)">新增</el-button>
-               <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
-            </template>
-         </el-table-column>
-      </el-table>
+         <el-table v-if="refreshTable" size="default" v-loading="loading" :data="menuList" row-key="menuId"
+            :default-expand-all="isExpandAll" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+            <el-table-column prop="menuName" label="菜单名称" show-overflow-tooltip >
+               <template #default="scope">
+                  <SvgIcon :name="scope.row.icon" />
+                  <span class="ml10">{{ scope.row.menuName }}</span>
+               </template>
+            </el-table-column>
+            
+            <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column prop="status" label="状态" >
+               <template #default="scope">
+                  <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
+               </template>
+            </el-table-column>
+            <el-table-column prop="orderNum" label="排序" ></el-table-column>
+            <el-table-column label="操作" align="center" width="210" class-name="small-padding fixed-width">
+               <template #default="scope">
+                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
+                  <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)">新增</el-button>
+                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+               </template>
+            </el-table-column>
+         </el-table>
+      </el-card>
 
       <!-- 添加或修改菜单对话框 -->
       <el-dialog :title="title" v-model="open" width="769px" append-to-body>
          <el-form ref="menuRef" :model="form" :rules="rules" label-width="100px">
             <el-row :gutter="35">
-               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                   <el-form-item label="上级菜单">
                      <!-- <el-tree-select v-model="form.parentId" :data="menuOptions"
                         :props="{ value: 'menuId', label: 'menuName', children: 'children' }" value-key="menuId"
                         placeholder="选择上级菜单" check-strictly /> -->
-                        <el-cascader
-								:options="menuOptions"
-								:props="{ checkStrictly: true, value: 'menuId', label: 'menuName' }"
-								placeholder="请选择上级菜单"
-								clearable
-								class="w100"
-								v-model="form.parentId"
-							>
-								<template #default="{ node, data }">
-									<span>{{ data.menuName }}</span>
-									<!-- <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span> -->
-								</template>
-							</el-cascader>
+                     <el-cascader :options="menuOptions"
+                        :props="{ checkStrictly: true, value: 'menuId', label: 'menuName' }" placeholder="请选择上级菜单"
+                        clearable class="w100" v-model="form.parentId">
+                        <template #default="{ node, data }">
+                           <span>{{ data.menuName }}</span>
+                           <!-- <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span> -->
+                        </template>
+                     </el-cascader>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                   <el-form-item label="菜单类型" prop="menuType">
                      <el-radio-group v-model="form.menuType">
                         <el-radio label="M">目录</el-radio>
@@ -91,22 +84,22 @@
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-							<el-form-item label="菜单图标">
-								<IconSelector placeholder="请输入菜单图标" v-model="form.icon" />
-							</el-form-item>
-						</el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+                  <el-form-item label="菜单图标">
+                     <IconSelector placeholder="请输入菜单图标" v-model="form.icon" />
+                  </el-form-item>
+               </el-col>
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                   <el-form-item label="菜单名称" prop="menuName">
                      <el-input v-model="form.menuName" placeholder="请输入菜单名称" />
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
                   <el-form-item label="显示排序" prop="orderNum">
                      <el-input-number v-model="form.orderNum" controls-position="right" :min="0" />
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType != 'F'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType != 'F'">
                   <el-form-item>
                      <template #label>
                         <span>
@@ -121,7 +114,7 @@
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType != 'F'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType != 'F'">
                   <el-form-item prop="path">
                      <template #label>
                         <span>
@@ -134,7 +127,7 @@
                      <el-input v-model="form.path" placeholder="请输入路由地址" />
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType == 'C'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType == 'C'">
                   <el-form-item prop="component">
                      <template #label>
                         <span>
@@ -147,7 +140,7 @@
                      <el-input v-model="form.component" placeholder="请输入组件路径" />
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType != 'M'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType != 'M'">
                   <el-form-item>
                      <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
                      <template #label>
@@ -161,7 +154,7 @@
                      </template>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType == 'C'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType == 'C'">
                   <el-form-item>
                      <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
                      <template #label>
@@ -174,7 +167,7 @@
                      </template>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType == 'C'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType == 'C'">
                   <el-form-item>
                      <template #label>
                         <span>
@@ -190,7 +183,7 @@
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType != 'F'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType != 'F'">
                   <el-form-item>
                      <template #label>
                         <span>
@@ -206,12 +199,12 @@
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20" v-if="form.menuType != 'F'">
+               <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" v-if="form.menuType != 'F'">
                   <el-form-item>
                      <template #label>
                         <span>
                            <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
-                             <el-icon><question-filled /></el-icon> 
+                              <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                            菜单状态
                         </span>
@@ -383,7 +376,7 @@ function handleDelete(row) {
 getList();
 </script>
 <style>
-.app-container{
+.app-container {
    height: 1000px;
    overflow: auto;
 }

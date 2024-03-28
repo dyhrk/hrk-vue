@@ -242,6 +242,10 @@
 	}
 }
 
+.el-table--default .el-table__cell{
+	padding: 12px 0 !important;
+}
+
 .el-dialog__body {
 	max-height: calc(90vh - 111px) !important;
 	overflow-y: auto;
