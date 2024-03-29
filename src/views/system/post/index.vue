@@ -1,7 +1,7 @@
 <template>
    <div class="app-container layout-padding w100">
       <div class="queryCard">
-         <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
+         <el-form :model="queryParams" ref="queryRef" label-width="80px" :inline="true" v-show="showSearch">
             <el-form-item label="岗位编码" prop="postCode" class="mb20">
                <el-input v-model="queryParams.postCode" placeholder="请输入岗位编码" clearable style="width: 200px"
                   @keyup.enter="handleQuery" />
@@ -24,7 +24,7 @@
       </div>
 
       <!-- 表格数据 -->
-      <el-card style="height: 100%;">
+      <el-card class="table_bord">
          <el-row :gutter="10" class="mb8">
             <el-col :span="1.5">
                <el-button type="primary" plain icon="Plus" @click="handleAdd"

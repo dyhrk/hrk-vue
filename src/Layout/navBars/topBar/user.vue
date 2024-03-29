@@ -94,7 +94,7 @@ const state = reactive({
 });
 // 布局配置 icon 点击时
 const onLayoutSetingClick = () => {
-	mittBus.emit('openSetingsDrawer');
+	// mittBus.emit('openSetingsDrawer');
 };
 
 // 语言切换

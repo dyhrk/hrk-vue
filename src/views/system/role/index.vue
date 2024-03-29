@@ -1,21 +1,21 @@
 <template>
   <div class="app-container layout-padding w100">
     <div class="queryCard">
-      <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true" label-width="100px">
-        <el-form-item label="角色名称:" prop="roleName" class="mb20" >
+      <el-form :model="queryParams" ref="queryRef" v-show="showSearch" :inline="true" label-width="80px">
+        <el-form-item label="角色名称" prop="roleName" class="mb20">
           <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable style="width: 200px"
             @keyup.enter="handleQuery" />
         </el-form-item>
-        <el-form-item label="权限字符:" prop="roleKey" class="mb20">
+        <el-form-item label="权限字符" prop="roleKey" class="mb20">
           <el-input v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable style="width: 200px"
             @keyup.enter="handleQuery" />
         </el-form-item>
-        <el-form-item label="状态:" prop="status" class="mb20">
+        <el-form-item label="状态" prop="status" class="mb20">
           <el-select v-model="queryParams.status" placeholder="角色状态" clearable style="width: 200px">
             <el-option v-for="dict in sys_normal_disable" :key="dict.value" :label="dict.label" :value="dict.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="创建时间:" style="width: 308px" class="mb20">
+        <el-form-item label="创建时间" style="width: 308px" class="mb20">
           <el-date-picker v-model="dateRange" value-format="YYYY-MM-DD" type="daterange" range-separator="-"
             start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
         </el-form-item>
@@ -25,25 +25,25 @@
         </el-form-item>
       </el-form>
 
-    </div >
+    </div>
     <!-- 表格数据 -->
-    <el-card style="height: 100%;">
-      <el-row :gutter="10" class="mb8">
+    <el-card class="table_bord">
+      <el-row :gutter="10" class="mb15">
         <el-col :span="1.5">
-          <el-button type="primary" plain icon="Plus"  @click="handleAdd"
-            v-hasPermi="['system:role:add']">新增</el-button>
+          <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermi="['system:role:add']">新增</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="danger" plain icon="Delete"  :disabled="multiple" @click="handleDelete"
+          <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
             v-hasPermi="['system:role:remove']">批量删除</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button type="warning" plain icon="Download"  @click="handleExport"
+          <el-button type="warning" plain icon="Download" @click="handleExport"
             v-hasPermi="['system:role:export']">导出</el-button>
         </el-col>
       </el-row>
 
-      <el-table v-loading="loading" :data="roleList" style="height: 100%;" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="roleList" style="flex: 1;"
+        :header-cell-style="{ background: '#eef1f6', color: '#606266' }" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="角色编号" prop="roleId" />
         <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" />
@@ -81,10 +81,11 @@
           </template>
         </el-table-column>
       </el-table>
-
+      
       <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
         v-model:limit="queryParams.pageSize" @pagination="getList" />
     </el-card>
+
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" v-model="open" width="769px" append-to-body>
       <el-form ref="roleRef" :model="form" :rules="rules" label-width="100px">

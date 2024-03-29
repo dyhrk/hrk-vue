@@ -1,24 +1,24 @@
 <template>
-   <div class="app-container layout-padding w100">
+   <div class="app-container  w100">
       <div class="queryCard">
-         <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch">
-            <el-form-item label="菜单名称" prop="menuName">
+         <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="80px">
+            <el-form-item label="菜单名称" prop="menuName" class="mb20">
                <el-input v-model="queryParams.menuName" placeholder="请输入菜单名称" clearable style="width: 200px"
                   @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="状态" prop="status">
+            <el-form-item label="状态" prop="status" class="mb20">
                <el-select v-model="queryParams.status" placeholder="菜单状态" clearable style="width: 200px">
                   <el-option v-for="dict in sys_normal_disable" :key="dict.value" :label="dict.label"
                      :value="dict.value" />
                </el-select>
             </el-form-item>
-            <el-form-item>
+            <el-form-item class="mb20">
                <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
                <el-button icon="Refresh" @click="resetQuery">重置</el-button>
             </el-form-item>
          </el-form>
       </div>
-      <el-card>
+      <el-card class="table_bord">
          <el-row :gutter="10" class="mb8">
             <el-col :span="1.5">
                <el-button type="primary" plain icon="Plus" @click="handleAdd">新增</el-button>
@@ -376,8 +376,4 @@ function handleDelete(row) {
 getList();
 </script>
 <style>
-.app-container {
-   height: 1000px;
-   overflow: auto;
-}
 </style>
