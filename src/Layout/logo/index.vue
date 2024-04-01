@@ -1,7 +1,10 @@
 <template>
-	<div class="layout-logo"  @click="onThemeConfigChange">
+	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
 		<img :src="logoMini" class="layout-logo-medium-img" />
 		<span>{{ settingsConfig.globalTitle }}</span>
+	</div>
+	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
+		<img :src="logoMini" class="layout-logo-size-img" />
 	</div>
 </template>
 
@@ -16,6 +19,11 @@ const { settingsConfig } = storeToRefs(settingsStore);
 const onThemeConfigChange = () => {
 	settingsConfig.value.isCollapse = !settingsConfig.value.isCollapse;
 };
+// 设置 logo 的显示。classic 经典布局默认显示 logo
+const setShowLogo = computed(() => {
+	let { isCollapse, layout } = settingsConfig.value;
+	return !isCollapse || layout === 'classic' || document.body.clientWidth < 1000;
+});
 </script>
 
 <style scoped lang="scss">

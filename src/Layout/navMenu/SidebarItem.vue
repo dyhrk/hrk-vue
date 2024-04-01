@@ -1,18 +1,9 @@
 <template>
   <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow">
-      <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path, onlyOneChild.query)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)">
-          <SvgIcon :name="onlyOneChild.meta && onlyOneChild.meta.icon ?  onlyOneChild.meta.icon : '' " />
-          <template #title><span >{{ onlyOneChild.meta.title }}</span></template>
-        </el-menu-item>
-      </app-link>
-    </template>
-
-    <el-sub-menu v-else  :index="resolvePath(item.path)" teleported>
+    <el-sub-menu  :index="resolvePath(item.path)" teleported>
       <template #title>
         <SvgIcon :name=" item.meta && item.meta.icon ?  item.meta.icon : '' " />
-        <span >{{ item.meta.title }}</span>
+        <span >{{   item.meta && item.meta.title ?  item.meta.title : '' }}</span>
       </template>
 
       <sidebar-item
@@ -28,7 +19,6 @@
 
 <script setup>
 import { isExternal } from '@/utils/validate'
-import AppLink from './Link'
 import { getNormalPath } from '@/utils/lamb'
 import SvgIcon from "@/components/SvgIcon";
 
@@ -49,35 +39,6 @@ const props = defineProps({
 })
 
 const onlyOneChild = ref({});
-
-function hasOneShowingChild(children = [], parent) {
-  if (!children) {
-    children = [];
-  }
-  const showingChildren = children.filter(item => {
-    if (item.hidden) {
-      return false
-    } else {
-      // Temp set(will be used if only has one showing child)
-      onlyOneChild.value = item
-      console.log(onlyOneChild);
-      return true
-    }
-  })
-
-  // When there is only one child router, the child router is displayed by default
-  if (showingChildren.length === 1) {
-    return true
-  }
-
-  // Show parent if there are no child router to display
-  if (showingChildren.length === 0) {
-    onlyOneChild.value = { ...parent, path: '', noShowingChildren: true }
-    return true
-  }
-
-  return false
-};
 
 function resolvePath(routePath, routeQuery) {
   if (isExternal(routePath)) {
