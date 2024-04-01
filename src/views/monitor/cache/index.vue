@@ -66,7 +66,7 @@
 
 <script setup name="Cache">
 import { getCache } from '@/api/monitor/cache';
-// import * as echarts from 'echarts';
+import * as echarts from 'echarts';
 
 const cache = ref([]);
 const commandstats = ref(null);

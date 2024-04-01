@@ -13,6 +13,7 @@
     "@element-plus/icons-vue": "2.0.10",
     "axios": "0.27.2",
     "echarts": "^5.4.2",
+    "@vueup/vue-quill": "1.2.0",
     "element-plus": "^2.3.3",
     "fuse.js": "6.6.2",
     "sortablejs": "^1.15.0",

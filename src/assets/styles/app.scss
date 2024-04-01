@@ -224,3 +224,8 @@ a:hover {
 .w100 {
 	width: 100% !important;
 }
+
+.layout-aside-pc-64 {
+	width: 64px !important;
+	transition: width 0.3s ease;
+}

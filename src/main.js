@@ -14,6 +14,8 @@ import directive from './directive' // directive
 import Pagination from '@/components/Pagination'
 import elementIcons from '@/components/SvgIcon/svgicon'
 import RightToolbar from '@/components/RightToolbar'
+// 富文本组件
+import Editor from "@/components/Editor"
 
 // 注册指令
 import plugins from './plugins' // plugins
@@ -34,6 +36,7 @@ app.config.globalProperties.resetForm = resetForm
 app.component('DictTag', DictTag)
 app.component('RightToolbar', RightToolbar)
 app.component('Pagination', Pagination)
+app.component('Editor', Editor)
 app.use(plugins)
 directive(app)
 other.elSvg(app);

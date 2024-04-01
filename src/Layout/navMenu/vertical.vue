@@ -1,25 +1,33 @@
 <template>
-	<el-menu :default-active="activeMenu" background-color="transparent" :collapse="isCollapse" :unique-opened="true"
-		:collapse-transition="false">
+	<el-menu :default-active="activeMenu" background-color="transparent" :collapse="state.isCollapse"
+		:collapse-transition="false" :unique-opened="true">
 		<sidebar-item
-          v-for="(route, index) in sidebarRouters"
-          :key="route.path + index"
-          :item="route"
-          :base-path="route.path"
-        />
+		v-for="(route, index) in sidebarRouters"
+		:key="route.path + index"
+		:item="route"
+		:base-path="route.path" />
 	</el-menu>
 </template>
 
 <script setup name="navMenuVertical">
+import useSettingsStore from '@/store/modules/settings'
+const settingsStore = useSettingsStore()
+const { settingsConfig } = storeToRefs(settingsStore);
+
 // 引入组件
-const  SidebarItem = defineAsyncComponent(() => import('./SidebarItem'));
+const SidebarItem = defineAsyncComponent(() => import('./SidebarItem'));
 
 import useAppStore from '@/store/modules/app'
 import usePermissionStore from '@/store/modules/permission'
 
 const route = useRoute();
 const appStore = useAppStore()
-const isCollapse = computed(() => !appStore.sidebar.opened);
+const state = reactive({
+	// 修复：https://gitee.com/lyt-top/vue-next-admin/issues/I3YX6G
+	// defaultActive: route.meta.isDynamic ? route.meta.isDynamicPath : route.path,
+	isCollapse: false,
+});
+
 const permissionStore = usePermissionStore()
 
 const sidebarRouters = computed(() => permissionStore.sidebarRouters);
@@ -35,7 +43,7 @@ const activeMenu = computed(() => {
 // 设置 tagsView 高亮
 const isActive = (v) => {
 	// if (getThemeConfig.value.isShareTagsView) {
-		return v.path === activeMenu.value;
+	return v.path === activeMenu.value;
 	// } else {
 	// 	if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
 	// 		// 普通传参
@@ -47,4 +55,15 @@ const isActive = (v) => {
 	// 	}
 	// }
 };
+
+// 设置菜单的收起/展开
+watch(
+	() => settingsConfig.value.isCollapse,
+	(isCollapse) => {
+		document.body.clientWidth <= 1000 ? (state.isCollapse = false) : (state.isCollapse = isCollapse);
+	},
+	{
+		immediate: true,
+	}
+);
 </script>

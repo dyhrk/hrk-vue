@@ -5,7 +5,6 @@ const useAppStore = defineStore(
   {
     state: () => ({
       sidebar: {
-        opened:  true,
         withoutAnimation: false,
         hide: false
       },

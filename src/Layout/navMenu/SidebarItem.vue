@@ -60,6 +60,7 @@ function hasOneShowingChild(children = [], parent) {
     } else {
       // Temp set(will be used if only has one showing child)
       onlyOneChild.value = item
+      console.log(onlyOneChild);
       return true
     }
   })

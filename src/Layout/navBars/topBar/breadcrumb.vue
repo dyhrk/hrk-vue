@@ -35,7 +35,8 @@ const route = useRoute();
 const router = useRouter();
 
 const onThemeConfigChange = () => {
-
+	settingsConfig.value.isCollapse = !settingsConfig.value.isCollapse;
+	// setLocalThemeConfig();
 };
 function getBreadcrumb() {
 	// only show routes with meta.title
