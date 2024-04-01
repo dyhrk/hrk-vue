@@ -33,7 +33,6 @@ const SubItem = defineAsyncComponent(() => import('./subItem.vue'));
 const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
 
-import useAppStore from '@/store/modules/app'
 import usePermissionStore from '@/store/modules/permission'
 
 const route = useRoute();
@@ -54,12 +53,7 @@ const permissionStore = usePermissionStore()
 const sidebarRouters = computed(() => permissionStore.sidebarRouters);
 
 const activeMenu = computed(() => {
-	const { meta, path } = route;
-	// if set path, the sidebar will highlight the path you set
-	if (meta.activeMenu) {
-		return meta.activeMenu;
-	}
-	return path;
+	return route.path
 })
 // 设置 tagsView 高亮
 const isActive = (v) => {

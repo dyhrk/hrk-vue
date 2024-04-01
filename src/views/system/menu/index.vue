@@ -31,21 +31,21 @@
 
          <el-table v-if="refreshTable" size="default" v-loading="loading" :data="menuList" row-key="menuId"
             :default-expand-all="isExpandAll" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-            <el-table-column prop="menuName" label="菜单名称" show-overflow-tooltip >
+            <el-table-column prop="menuName" label="菜单名称" show-overflow-tooltip>
                <template #default="scope">
                   <SvgIcon :name="scope.row.icon" />
                   <span class="ml10">{{ scope.row.menuName }}</span>
                </template>
             </el-table-column>
-            
+
             <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column prop="status" label="状态" >
+            <el-table-column prop="status" label="状态">
                <template #default="scope">
                   <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
                </template>
             </el-table-column>
-            <el-table-column prop="orderNum" label="排序" ></el-table-column>
+            <el-table-column prop="orderNum" label="排序"></el-table-column>
             <el-table-column label="操作" align="center" width="210" class-name="small-padding fixed-width">
                <template #default="scope">
                   <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)">修改</el-button>
@@ -62,17 +62,10 @@
             <el-row :gutter="35">
                <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                   <el-form-item label="上级菜单">
-                     <!-- <el-tree-select v-model="form.parentId" :data="menuOptions"
+                     <el-tree-select v-model="form.parentId" :data="menuOptions"
                         :props="{ value: 'menuId', label: 'menuName', children: 'children' }" value-key="menuId"
-                        placeholder="选择上级菜单" check-strictly /> -->
-                     <el-cascader :options="menuOptions"
-                        :props="{ checkStrictly: true, value: 'menuId', label: 'menuName' }" placeholder="请选择上级菜单"
-                        clearable class="w100" v-model="form.parentId">
-                        <template #default="{ node, data }">
-                           <span>{{ data.menuName }}</span>
-                           <!-- <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span> -->
-                        </template>
-                     </el-cascader>
+                        placeholder="选择上级菜单" check-strictly />
+
                   </el-form-item>
                </el-col>
                <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
@@ -375,5 +368,4 @@ function handleDelete(row) {
 
 getList();
 </script>
-<style>
-</style>
+<style></style>

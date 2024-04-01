@@ -41,13 +41,13 @@ const usePermissionStore = defineStore(
             const defaultData = JSON.parse(JSON.stringify(res.data))
             const sidebarRoutes = filterAsyncRouter(sdata)
             const rewriteRoutes = filterAsyncRouter(rdata, false, true)
-            // const defaultRoutes = filterAsyncRouter(defaultData)
+            const defaultRoutes = filterAsyncRouter(defaultData)
             const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
             asyncRoutes.forEach(route => { router.addRoute(route) })
             this.setRoutes(rewriteRoutes)
-            this.setSidebarRouters(sidebarRoutes)
+            this.setSidebarRouters((sidebarRoutes))
             this.setDefaultRoutes(sidebarRoutes)
-            // this.setTopbarRoutes(defaultRoutes)
+            this.setTopbarRoutes(defaultRoutes)
             resolve(rewriteRoutes)
           })
         })
@@ -89,7 +89,6 @@ function filterChildren(childrenMap, lastRouter = false) {
     if (el.children && el.children.length) {
       if (el.component === 'ParentView' && !lastRouter) {
         el.children.forEach(c => {
-          c.path = el.path + '/' + c.path
           if (c.children && c.children.length) {
             children = children.concat(filterChildren(c.children, c))
             return
