@@ -12,7 +12,7 @@
 					<el-dropdown-item command="small" :disabled="state.disabledSize === 'small'">小型</el-dropdown-item>
 				</el-dropdown-menu>
 			</template>
-		</el-dropdown> -->
+</el-dropdown> -->
 		<el-dropdown :show-timeout="70" :hide-timeout="50" trigger="click" @command="onLanguageChange">
 			<div class="layout-navbars-breadcrumb-user-icon">
 				<i class="iconfont" :class="state.disabledI18n === 'en' ? 'icon-fuhao-yingwen' : 'icon-fuhao-zhongwen'"
@@ -47,7 +47,7 @@
 		<el-dropdown :show-timeout="70" :hide-timeout="50" @command="onHandleCommandClick">
 			<span class="layout-navbars-breadcrumb-user-link">
 				<img :src="userStore.avatar" class="layout-navbars-breadcrumb-user-link-photo mr5" />
-				<!-- {{ userInfos.userName === '' ? 'common' : userInfos.userName }} -->
+				 <span class="name">{{ useUserStore().name }}</span> 
 				<el-icon class="el-icon--right">
 					<ele-ArrowDown />
 				</el-icon>
@@ -77,11 +77,10 @@ import useUserStore from '@/store/modules/user'
 import { storeToRefs } from 'pinia';
 import { defineAsyncComponent, computed, unref, ref, reactive, onMounted, onUnmounted } from 'vue';
 import { ElMessageBox, ElMessage, ClickOutside as vClickOutside } from 'element-plus';
-
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
-const userNewsRef = ref();
+
 // 消息通知点击时
 const onUserNewsClick = () => {
 	// unref(userNewsRef).popperRef?.delayHide?.();
@@ -107,45 +106,28 @@ const onLanguageChange = (lang) => {
 	// initI18nOrSize('globalI18n', 'disabledI18n');
 };
 // 下拉菜单点击时
-const onHandleCommandClick = (path) => {
-	// if (path === 'logOut') {
-	// 	ElMessageBox({
-	// 		closeOnClickModal: false,
-	// 		closeOnPressEscape: false,
-	// 		title: t('message.user.logOutTitle'),
-	// 		message: t('message.user.logOutMessage'),
-	// 		showCancelButton: true,
-	// 		confirmButtonText: t('message.user.logOutConfirm'),
-	// 		cancelButtonText: t('message.user.logOutCancel'),
-	// 		buttonSize: 'default',
-	// 		beforeClose: (action, instance, done) => {
-	// 			if (action === 'confirm') {
-	// 				instance.confirmButtonLoading = true;
-	// 				instance.confirmButtonText = t('message.user.logOutExit');
-	// 				setTimeout(() => {
-	// 					done();
-	// 					setTimeout(() => {
-	// 						instance.confirmButtonLoading = false;
-	// 					}, 300);
-	// 				}, 700);
-	// 			} else {
-	// 				done();
-	// 			}
-	// 		},
-	// 	})
-	// 		.then(async () => {
-	// 			// 清除缓存/token等
-	// 			Session.clear();
-	// 			// 使用 reload 时，不需要调用 resetRoute() 重置路由
-	// 			window.location.reload();
-	// 		})
-	// 		.catch(() => {});
-	// } else if (path === 'wareHouse') {
-	// 	window.open('https://gitee.com/lyt-top/vue-next-admin');
-	// } else {
-	// 	router.push(path);
-	// }
+const onHandleCommandClick = (command) => {
+	switch (command) {
+		case "logout":
+			logout();
+			break;
+		default:
+			break;
+	}
 };
+
+function logout() {
+	ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
+	}).then(() => {
+		userStore.logOut().then(() => {
+			location.href = '/index';
+		})
+	}).catch(() => { });
+}
+
 // 组件大小改变
 const onComponentSizeChange = (size) => {
 	// Local.remove('themeConfig');
@@ -231,5 +213,12 @@ const onScreenfullClick = () => {
 	:deep(.el-badge__content.is-fixed) {
 		top: 12px;
 	}
+}
+.name{
+  margin-left: 5px;
+  margin-right: 5px;
+  font-family: "AliRegular";
+  font-size: 14px;
+  font-style: normal !important;
 }
 </style>

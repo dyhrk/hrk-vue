@@ -31,6 +31,7 @@ app.config.globalProperties.handleTree = handleTree
 app.config.globalProperties.parseTime = parseTime
 app.config.globalProperties.addDateRange = addDateRange
 app.config.globalProperties.resetForm = resetForm
+app.config.globalProperties.selectDictLabel = selectDictLabel
 
 // 全局组件挂载
 app.component('DictTag', DictTag)

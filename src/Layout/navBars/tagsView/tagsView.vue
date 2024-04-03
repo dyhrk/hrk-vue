@@ -32,6 +32,7 @@
 </template>
 
 <script setup name="layoutTagsView">
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import usePermissionStore from '@/store/modules/permission'
 import Sortable from 'sortablejs';
 // import { ElMessage } from 'element-plus';
@@ -103,6 +104,7 @@ const isActive = (v) => {
 	} else {
 		if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
 			// 普通传参
+			console.log(v.path, state.routePath,"2");
 			return v.url ? v.url === state.routeActive : v.path === state.routeActive;
 		} else {
 			// 通过 name 传参，params 取值，刷新页面参数消失
@@ -344,16 +346,20 @@ const onMousedownMenu = (v, e) => {
 		onCurrentContextmenuClick(item);
 	}
 };
-// // 当前的 tagsView 项点击时
-// const onTagsClick = (v, k) => {
-// 	state.tagsRefsIndex = k;
-// 	router.push(v);
-// 	// 分栏布局时，收起/展开菜单
-// 	if (getsettingsConfig.value.layout === 'columns') {
-// 		const item = routesList.value.find((r) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);
-// 		!item.children ? (getsettingsConfig.value.isCollapse = true) : (getsettingsConfig.value.isCollapse = false);
-// 	}
-// };
+// 当前的 tagsView 项点击时
+const onTagsClick = (v, k) => {
+	state.tagsRefsIndex = k;
+	router.push(v);
+	console.log(v.path, state.routePath,route.path);
+	setTimeout(()=>{
+		console.log(v.path, state.routePath,route.path);
+	},1000)
+	// 分栏布局时，收起/展开菜单
+	if (getsettingsConfig.value.layout === 'columns') {
+		const item = routesList.value.find((r) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);
+		!item.children ? (getsettingsConfig.value.isCollapse = true) : (getsettingsConfig.value.isCollapse = false);
+	}
+};
 // // 处理 url，地址栏链接有参数时，tagsview 右键菜单刷新功能失效问题，感谢 @ZzZz-RIPPER、@dejavuuuuu
 // // https://gitee.com/lyt-top/vue-next-admin/issues/I5K3YO
 // // https://gitee.com/lyt-top/vue-next-admin/issues/I61VS9
@@ -488,6 +494,7 @@ const initSortable = async () => {
 // 页面加载时
 onMounted(() => {
 	initTags()
+	addTags()
 });
 const affixTags = ref([]);
 function initTags() {
@@ -499,6 +506,16 @@ function initTags() {
 			useTagsViewStore().addVisitedView(tag)
 		}
 	}
+}
+function addTags() {
+	const { name } = route
+	if (name) {
+		useTagsViewStore().addView(route)
+		if (route.meta.link) {
+			useTagsViewStore().addIframeView(route);
+		}
+	}
+	return false
 }
 function filterAffixTags(routes, basePath = '') {
 	let tags = []
@@ -522,13 +539,16 @@ function filterAffixTags(routes, basePath = '') {
 	return tags
 }
 
-// // 路由更新时（组件内生命钩子）
-// onBeforeRouteUpdate(async (to) => {
-// 	state.routeActive = setTagsViewHighlight(to);
-// 	state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
-// 	await addTagsView(to.path,to);
-// 	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
-// });
+// 路由更新时（组件内生命钩子）
+onBeforeRouteUpdate(async (to) => {
+	console.log("cccccccccc",to);
+	state.routeActive = setTagsViewHighlight(to);
+	// state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
+	state.routePath = to.path;
+	console.log();
+	addTagsView(to.path,to);
+	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
+});
 // // 监听路由的变化，动态赋值给 tagsView
 // watch(
 // 	() => tagsViewRoutes.value,
