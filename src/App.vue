@@ -1,15 +1,32 @@
 <template>
   <el-config-provider :size="getGlobalComponentSize" :locale="getGlobalI18n">
+    <!-- <Setings ref="setingsRef"/> -->
     <router-view  />
   </el-config-provider>
 </template>
 <script setup>
+
+const Setings = defineAsyncComponent(() => import('@/layout/navBars/topBar/setings.vue'));
+
+import useSettingsStore from '@/store/modules/settings'
+
+
+const settingsStore = useSettingsStore()
+const { settingsConfig } = storeToRefs(settingsStore);
+
 import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import other from "@/utils/other";
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
+
+// 设置锁屏时组件显示隐藏
+const setLockScreen = computed(() => {
+	// 防止锁屏后，刷新出现不相关界面
+	// https://gitee.com/lyt-top/vue-next-admin/issues/I6AF8P
+	return false
+});
 
 import setIntroduction from '@/utils/setIconfont';
 

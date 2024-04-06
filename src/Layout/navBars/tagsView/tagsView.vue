@@ -14,15 +14,9 @@
 					<i class="iconfont icon-webicon318 layout-navbars-tagsview-ul-li-iconfont" v-if="isActive(v)"></i>
 					<SvgIcon :name="v.meta.icon" v-if="!isActive(v) && getsettingsConfig.isTagsviewIcon" class="pr5" />
 					<span>{{ v.meta.title }}</span>
-					<template v-if="isActive(v)">
-						<SvgIcon name="ele-RefreshRight" class="ml5 layout-navbars-tagsview-ul-li-refresh"
-							@click.stop="refreshCurrentTagsView($route.fullPath)" />
-						<SvgIcon name="ele-Close" class="layout-navbars-tagsview-ul-li-icon layout-icon-active"
-							v-if="!v.meta.isAffix"
-							@click.stop="closeCurrentTagsView(getsettingsConfig.isShareTagsView ? v.path : v.url)" />
-					</template>
+
 					<SvgIcon name="ele-Close" class="layout-navbars-tagsview-ul-li-icon layout-icon-three"
-						v-if="!v.meta.isAffix"
+						v-if="isActive(v)"
 						@click.stop="closeCurrentTagsView(getsettingsConfig.isShareTagsView ? v.path : v.url)" />
 				</li>
 			</ul>
@@ -104,7 +98,7 @@ const isActive = (v) => {
 	} else {
 		if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
 			// 普通传参
-			console.log(v.path, state.routePath,"2");
+			console.log(v.path, state.routePath, "2");
 			return v.url ? v.url === state.routeActive : v.path === state.routeActive;
 		} else {
 			// 通过 name 传参，params 取值，刷新页面参数消失
@@ -350,10 +344,8 @@ const onMousedownMenu = (v, e) => {
 const onTagsClick = (v, k) => {
 	state.tagsRefsIndex = k;
 	router.push(v);
-	console.log(v.path, state.routePath,route.path);
-	setTimeout(()=>{
-		console.log(v.path, state.routePath,route.path);
-	},1000)
+	setTimeout(() => {
+	}, 1000)
 	// 分栏布局时，收起/展开菜单
 	if (getsettingsConfig.value.layout === 'columns') {
 		const item = routesList.value.find((r) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);
@@ -541,12 +533,11 @@ function filterAffixTags(routes, basePath = '') {
 
 // 路由更新时（组件内生命钩子）
 onBeforeRouteUpdate(async (to) => {
-	console.log("cccccccccc",to);
 	state.routeActive = setTagsViewHighlight(to);
 	// state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
 	state.routePath = to.path;
 	console.log();
-	addTagsView(to.path,to);
+	addTagsView(to.path, to);
 	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
 });
 // // 监听路由的变化，动态赋值给 tagsView

@@ -9,7 +9,7 @@
         </div>
         <el-form ref="loginRef" :model="loginForm" class="login-content-form" :rules="loginRules">
           <el-form-item class="login-animation1" prop="username">
-            <el-input v-model="loginForm.username" minlength="20" clearable type="text" size="large" auto-complete="off"
+            <el-input v-model="loginForm.username" minlength="20" clearable link size="large" auto-complete="off"
               placeholder="账号">
               <template #prefix>
                 <el-icon class="el-input__icon"><ele-User /></el-icon>

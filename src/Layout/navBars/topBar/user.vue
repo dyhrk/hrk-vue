@@ -36,10 +36,10 @@
 				</el-icon>
 			</el-badge>
 		</div>
-		<!-- <el-popover ref="userNewsRef" :virtual-ref="userNewsBadgeRef" placement="bottom" trigger="click"
+		<el-popover ref="userNewsRef" :virtual-ref="userNewsBadgeRef" placement="bottom" trigger="click"
 			transition="el-zoom-in-top" virtual-triggering :width="300" :persistent="false">
 			<UserNews /> 
-		</el-popover> -->
+		</el-popover>
 		<div class="layout-navbars-breadcrumb-user-icon mr10" @click="onScreenfullClick">
 			<i class="iconfont" :title="state.isScreenfull ? '关全屏' : '开全屏'"
 				:class="!state.isScreenfull ? 'icon-fullscreen' : 'icon-tuichuquanping'"></i>
@@ -77,13 +77,19 @@ import useUserStore from '@/store/modules/user'
 import { storeToRefs } from 'pinia';
 import { defineAsyncComponent, computed, unref, ref, reactive, onMounted, onUnmounted } from 'vue';
 import { ElMessageBox, ElMessage, ClickOutside as vClickOutside } from 'element-plus';
+// 引入组件
+const UserNews = defineAsyncComponent(() => import('@/Layout/navBars/topBar/userNews.vue'));
 const userStore = useUserStore()
 const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
 
+// 定义变量内容
+const userNewsRef = ref();
+const userNewsBadgeRef = ref();
+
 // 消息通知点击时
 const onUserNewsClick = () => {
-	// unref(userNewsRef).popperRef?.delayHide?.();
+	unref(userNewsRef).popperRef?.delayHide?.();
 };
 
 const state = reactive({
