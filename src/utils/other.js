@@ -2,6 +2,7 @@ import useSettingsStore from '@/store/modules/settings'
 import * as svg from '@element-plus/icons-vue';
 import pinia from '@/store/index';
 import { localCache } from '@/plugins/cache'
+import { verifyUrl } from '@/utils/toolsValidate';
 
 // 引入组件
 const SvgIcon = defineAsyncComponent(() => import('@/components/SvgIcon/index.vue'));
@@ -57,6 +58,18 @@ export const globalComponentSize = () => {
 	return localCache.get('settingsConfig')?.globalComponentSize || settingsConfig.value?.globalComponentSize;
 };
 
+/**
+ * 打开外部链接
+ * @param val 当前点击项菜单
+ */
+export function handleOpenLink(val) {
+	// const { origin, pathname } = window.location;
+	// router.push(val.path);
+	console.log("cccccccccccc");
+	if (verifyUrl(val.meta?.link)) window.open(val.meta?.link);
+	// else window.open(`${origin}${pathname}#${val.meta?.isLink}`);
+}
+
 const other = {
 	elSvg: (app) => {
 		elSvg(app);
@@ -64,8 +77,12 @@ const other = {
 	globalComponentSize: () => {
 		return globalComponentSize();
 	},
+	handleOpenLink: (val) => {
+		handleOpenLink(val);
+	},
 
 };
+
 
 // 统一批量导出
 export default other;

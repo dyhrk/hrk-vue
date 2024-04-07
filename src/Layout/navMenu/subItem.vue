@@ -26,7 +26,7 @@
 
 <script name="navMenuSubItem" setup>
 import { computed } from 'vue';
-// import other from '/@/utils/other';
+import other from '@/utils/other';
 
 // 定义父组件传过来的值
 const props = defineProps({
@@ -43,6 +43,7 @@ const chils = computed(() => {
 });
 // 打开外部链接
 const onALinkClick = (val) => {
-	// other.handleOpenLink(val);
+	console.log("cs");
+	other.handleOpenLink(val);
 };
 </script>

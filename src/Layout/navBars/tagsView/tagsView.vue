@@ -94,11 +94,13 @@ const getsettingsConfig = computed(() => {
 // 设置 tagsView 高亮
 const isActive = (v) => {
 	if (getsettingsConfig.value.isShareTagsView) {
+		console.log(v.path ,state.routePath,122);
 		return v.path === state.routePath;
+		
 	} else {
+		console.log(v.path ,state.routePath,211);
 		if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
 			// 普通传参
-			console.log(v.path, state.routePath, "2");
 			return v.url ? v.url === state.routeActive : v.path === state.routeActive;
 		} else {
 			// 通过 name 传参，params 取值，刷新页面参数消失
@@ -342,10 +344,10 @@ const onMousedownMenu = (v, e) => {
 };
 // 当前的 tagsView 项点击时
 const onTagsClick = (v, k) => {
+	console.log("11111111111111111111111",v,k);
 	state.tagsRefsIndex = k;
 	router.push(v);
-	setTimeout(() => {
-	}, 1000)
+
 	// 分栏布局时，收起/展开菜单
 	if (getsettingsConfig.value.layout === 'columns') {
 		const item = routesList.value.find((r) => r.path.indexOf(`/${v.path.split('/')[1]}`) > -1);
@@ -381,12 +383,14 @@ const onTagsClick = (v, k) => {
 // };
 // 处理 tagsView 高亮（多标签详情时使用，单标签详情未使用）
 const setTagsViewHighlight = (v) => {
+	console.log("11111111");
 	let params = v.query && Object.keys(v.query).length > 0 ? v.query : v.params;
 	if (!params || Object.keys(params).length <= 0) return v.path;
 	let path = '';
 	for (let i in params) {
 		path += params[i];
 	}
+	console.log(`${v.meta?.isDynamic ? v.meta.isDynamicPath : v.path}-${path}`);
 	// 判断是否是动态路由（xxx/:id/:name"）
 	return `${v.meta?.isDynamic ? v.meta.isDynamicPath : v.path}-${path}`;
 };
@@ -533,24 +537,25 @@ function filterAffixTags(routes, basePath = '') {
 
 // 路由更新时（组件内生命钩子）
 onBeforeRouteUpdate(async (to) => {
+	console.log("111111111111ss1",to);
 	state.routeActive = setTagsViewHighlight(to);
 	// state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
 	state.routePath = to.path;
-	console.log();
 	addTagsView(to.path, to);
 	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
 });
-// // 监听路由的变化，动态赋值给 tagsView
-// watch(
-// 	() => tagsViewRoutes.value,
-// 	(val) => {
-// 		if (val.length === state.tagsViewRoutesList.length) return false;
-// 		getTagsViewRoutes();
-// 	},
-// 	{
-// 		deep: true,
-// 	}
-// );
+
+// 监听路由的变化，动态赋值给 tagsView
+watch(
+	() => tagsViewRoutes.value,
+	(val) => {
+		if (val.length === state.tagsViewRoutesList.length) return false;
+		getTagsViewRoutes();
+	},
+	{
+		deep: true,
+	}
+);
 </script>
 
 <style scoped lang="scss">

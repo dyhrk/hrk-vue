@@ -28,7 +28,7 @@
     "vue": "3.2.45",
     "vue-cropper": "1.0.3",
     "vue-i18n": "^9.10.1",
-    "vue-router": "4.1.4",
+		"vue-router": "^4.3.0",
     "vue3-scale-box": "^0.1.9"
   },
   "devDependencies": {

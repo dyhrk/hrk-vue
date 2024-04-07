@@ -1,9 +1,10 @@
 import auth from '@/plugins/auth'
 import router, { constantRoutes, dynamicRoutes } from '@/router'
 import { getRouters } from '@/api/menu'
-import Layout from '@/layout/index'
+import Layout from '@/Layout'
 import ParentView from '@/components/ParentView'
-import InnerLink from '@/layout/routerView/InnerLink'
+import InnerLink from '@/Layout/routerView/InnerLink'
+import Link from '@/Layout/routerView/Link'
 
 // 匹配views里面所有的.vue文件
 const modules = import.meta.glob('./../../views/**/*.vue')
@@ -14,20 +15,12 @@ const usePermissionStore = defineStore(
     state: () => ({
       routes: [],
       addRoutes: [],
-      defaultRoutes: [],
-      topbarRouters: [],
       sidebarRouters: []
     }),
     actions: {
       setRoutes(routes) {
         this.addRoutes = routes
         this.routes = constantRoutes.concat(routes)
-      },
-      setDefaultRoutes(routes) {
-        this.defaultRoutes = constantRoutes.concat(routes)
-      },
-      setTopbarRoutes(routes) {
-        this.topbarRouters = routes
       },
       setSidebarRouters(routes) {
         this.sidebarRouters = routes
@@ -38,22 +31,34 @@ const usePermissionStore = defineStore(
           getRouters().then(res => {
             const sdata = JSON.parse(JSON.stringify(res.data))
             const rdata = JSON.parse(JSON.stringify(res.data))
-            const defaultData = JSON.parse(JSON.stringify(res.data))
             const sidebarRoutes = filterAsyncRouter(sdata)
             const rewriteRoutes = filterAsyncRouter(rdata, false, true)
-            const defaultRoutes = filterAsyncRouter(defaultData)
-            const asyncRoutes = filterDynamicRoutes(dynamicRoutes)
-            asyncRoutes.forEach(route => { router.addRoute(route) })
-            this.setRoutes(rewriteRoutes)
-            this.setSidebarRouters((sidebarRoutes))
-            this.setDefaultRoutes(sidebarRoutes)
-            this.setTopbarRoutes(defaultRoutes)
+            this.setSidebarRouters(hasOneShowingChild(constantRoutes).concat(sidebarRoutes))
             resolve(rewriteRoutes)
           })
         })
       }
     }
   })
+
+function hasOneShowingChild(children = []) {
+  let comp = []
+  if (!children) {
+    children = [];
+  }
+  children.filter(item => {
+    if (!item.hidden) {
+      if (item.children) {
+        const Subclass = hasOneShowingChild(item.children)
+        comp = comp.concat(Subclass)
+      }
+      if (item.meta) {
+        comp.push(item)
+      }
+    }
+  })
+  return comp
+};
 
 // 遍历后台传来的路由字符串，转换为组件对象
 function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
@@ -69,6 +74,8 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
         route.component = ParentView
       } else if (route.component === 'InnerLink') {
         route.component = InnerLink
+      } else if (route.meta.link) {
+        route.component = Link
       } else {
         route.component = loadView(route.component)
       }

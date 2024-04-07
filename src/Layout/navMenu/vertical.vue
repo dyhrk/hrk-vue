@@ -28,6 +28,7 @@
 <script setup name="navMenuVertical">
 import useSettingsStore from '@/store/modules/settings'
 // 引入组件
+import other from '@/utils/other';
 const SubItem = defineAsyncComponent(() => import('./subItem.vue'));
 
 const settingsStore = useSettingsStore()
@@ -45,12 +46,12 @@ const state = reactive({
 
 // 打开外部链接
 const onALinkClick = (val) => {
-	// other.handleOpenLink(val);
+	other.handleOpenLink(val);
 };
 
 const permissionStore = usePermissionStore()
 
-const sidebarRouters = computed(() => permissionStore.sidebarRouters);
+const sidebarRouters = computed(() => permissionStore.sidebarRouters);4
 
 const activeMenu = computed(() => {
 	return route.path
