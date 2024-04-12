@@ -21,14 +21,14 @@
 				</li>
 			</ul>
 		</el-scrollbar>
-		<!-- <Contextmenu :dropdown="state.dropdown" ref="contextmenuRef" @currentContextmenuClick="onCurrentContextmenuClick" /> -->
+
 	</div>
 </template>
 
 <script setup name="layoutTagsView">
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import usePermissionStore from '@/store/modules/permission'
-import Sortable from 'sortablejs';
+
 // import { ElMessage } from 'element-plus';
 import { storeToRefs } from 'pinia';
 import useTagsViewRoutes from '@/store/modules/tagsViewRoutes';
@@ -40,15 +40,6 @@ const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
 
 
-// import { useKeepALiveNames } from '@/stores/keepAliveNames';
-// import { useRoutesList } from '@/stores/routesList';
-// import { Session } from '@/utils/storage';
-// import { isObjectValueEqual } from '@/utils/arrayOperation';
-// import other from '@/utils/other';
-// import mittBus from '@/utils/mitt';
-
-// // 引入组件
-// const Contextmenu = defineAsyncComponent(() => import('@/Layout/navBars/tagsView/contextmenu.vue'));
 
 // 定义变量内容
 const tagsRefs = ref([]);
@@ -93,21 +84,7 @@ const getsettingsConfig = computed(() => {
 // });
 // 设置 tagsView 高亮
 const isActive = (v) => {
-	if (getsettingsConfig.value.isShareTagsView) {
-		console.log(v.path ,state.routePath,122);
-		return v.path === state.routePath;
-		
-	} else {
-		console.log(v.path ,state.routePath,211);
-		if ((v.query && Object.keys(v.query).length) || (v.params && Object.keys(v.params).length)) {
-			// 普通传参
-			return v.url ? v.url === state.routeActive : v.path === state.routeActive;
-		} else {
-			// 通过 name 传参，params 取值，刷新页面参数消失
-			// https://gitee.com/lyt-top/vue-next-admin/issues/I51RS9
-			return v.path === state.routePath;
-		}
-	}
+	return v.path === route.path
 };
 
 // 获取 pinia 中的 tagsViewRoutes 列表
@@ -344,7 +321,7 @@ const onMousedownMenu = (v, e) => {
 };
 // 当前的 tagsView 项点击时
 const onTagsClick = (v, k) => {
-	console.log("11111111111111111111111",v,k);
+	console.log("11111111111111111111111", v, k);
 	state.tagsRefsIndex = k;
 	router.push(v);
 
@@ -535,15 +512,6 @@ function filterAffixTags(routes, basePath = '') {
 	return tags
 }
 
-// 路由更新时（组件内生命钩子）
-onBeforeRouteUpdate(async (to) => {
-	console.log("111111111111ss1",to);
-	state.routeActive = setTagsViewHighlight(to);
-	// state.routePath = to.meta.isDynamic ? to.meta.isDynamicPath : to.path;
-	state.routePath = to.path;
-	addTagsView(to.path, to);
-	getTagsRefsIndex(getsettingsConfig.value.isShareTagsView ? state.routePath : state.routeActive);
-});
 
 // 监听路由的变化，动态赋值给 tagsView
 watch(
@@ -556,6 +524,11 @@ watch(
 		deep: true,
 	}
 );
+
+watch(route, () => {
+	addTags()
+	// moveToCurrentTag()
+})
 </script>
 
 <style scoped lang="scss">
