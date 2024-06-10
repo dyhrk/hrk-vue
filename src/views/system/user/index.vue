@@ -233,10 +233,13 @@
             </div>
          </template>
       </el-dialog>
+      <Employee />
    </div>
 </template>
 
 <script setup name="User">
+import Employee from "@/components/Employee";
+
 import { getToken } from "@/utils/auth";
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user";
 
