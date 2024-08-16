@@ -1,5 +1,5 @@
 <template>
-	<el-menu router :default-active="activeMenu" background-color="transparent" :collapse="state.isCollapse"
+	<!-- <el-menu router :default-active="activeMenu" background-color="transparent" :collapse="state.isCollapse"
 		:collapse-transition="false" :unique-opened="true">
 		<template v-for="val in sidebarRouters">
 			<el-sub-menu :index="val.path" v-if="val.children && val.children.length > 0" :key="val.path">
@@ -7,29 +7,37 @@
 					<SvgIcon :name=" val.meta && val.meta.icon ?  val.meta.icon : '' " />
 					<span>{{   val.meta && val.meta.title ?  val.meta.title : '' }}</span>
 				</template>
-				<SubItem :chil="val.children" />
-			</el-sub-menu>
-			<template v-else>
+<SubItem :chil="val.children" />
+</el-sub-menu>
+<template v-else>
 				<el-menu-item :index="val.path" :key="val.path">
 					<SvgIcon :name=" val.meta && val.meta.icon ?  val.meta.icon : '' " />
 					<template #title v-if="val.meta && !val.meta.link">
 						<span>{{ val.meta && val.meta.title ?  val.meta.title : '' }}</span>
 					</template>
-					<template #title v-else>
+<template #title v-else>
 						<a class="w100" @click.prevent="onALinkClick(val)">{{ val.meta && val.meta.title ?  val.meta.title : '' }}</a>
 					</template>
-				</el-menu-item>
-			</template>
-		</template>
-		
+</el-menu-item>
+</template>
+</template>
+
+</el-menu> -->
+
+	<el-menu :default-active="activeMenu" :collapse="state.isCollapse" background-color="transparent"
+		:unique-opened="true" :collapse-transition="false">
+		<sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route"
+			:base-path="route.path" />
 	</el-menu>
+
+
 </template>
 
 <script setup name="navMenuVertical">
 import useSettingsStore from '@/store/modules/settings'
 // 引入组件
 import other from '@/utils/other';
-const SubItem = defineAsyncComponent(() => import('./subItem.vue'));
+const SidebarItem = defineAsyncComponent(() => import('./SidebarItem.vue'));
 
 const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
@@ -51,7 +59,7 @@ const onALinkClick = (val) => {
 
 const permissionStore = usePermissionStore()
 
-const sidebarRouters = computed(() => permissionStore.sidebarRouters);4
+const sidebarRouters = computed(() => permissionStore.sidebarRouters); 4
 
 const activeMenu = computed(() => {
 	return route.path

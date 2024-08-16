@@ -233,7 +233,7 @@
             </div>
          </template>
       </el-dialog>
-      <Employee />
+      <!-- <Employee /> -->
    </div>
 </template>
 
