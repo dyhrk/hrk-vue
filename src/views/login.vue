@@ -25,13 +25,16 @@
             </el-input>
           </el-form-item>
           <el-form-item class="login-animation3" prop="code" v-if="captchaEnabled">
-            <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%"
-              @keyup.enter="handleLogin">
-              <template #prefix><el-icon class="el-input__icon"><ele-Position /></el-icon></template>
-            </el-input>
-            <div class="login-code">
-              <img :src="codeUrl" @click="getCode" class="login-code-img" />
+            <div style="display: flex;justify-content: space-between;"> 
+              <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%"
+                @keyup.enter="handleLogin">
+                <template #prefix><el-icon class="el-input__icon"><ele-Position /></el-icon></template>
+              </el-input>
+              <div class="login-code" style="width: 33%;">
+                <img :src="codeUrl" @click="getCode" class="login-code-img" />
+              </div>
             </div>
+
           </el-form-item>
           <el-checkbox class="login-animation4" v-model="loginForm.rememberMe"
             style="margin: 0px 0px 25px 0px">记住密码</el-checkbox>
@@ -59,8 +62,8 @@ const router = useRouter();
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
 const loginForm = ref({
-  username: "admin",
-  password: "admin123",
+  username: "",
+  password: "",
   rememberMe: false,
   code: "",
   uuid: "",
@@ -148,9 +151,8 @@ getCookie();
   background-color: #fff;
 }
 
-.login-code-img {
-  height: 40px;
-  padding-left: 12px;
+.login-animation3 {
+  text-align: right;
 }
 
 .login-code {
@@ -161,6 +163,12 @@ getCookie();
   img {
     cursor: pointer;
     vertical-align: middle;
+  }
+
+  .login-code-img {
+    height: 40px;
+    width: 100%;
+
   }
 }
 

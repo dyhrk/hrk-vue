@@ -13,10 +13,16 @@
 			}
 		}
 		.login-right {
+			background-color: #fff;
+			border-radius: 6px;
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
+			.login-form{
+				margin-top: 20px;
+				margin-bottom: 10px;
+			}
 		}
 	}
 }

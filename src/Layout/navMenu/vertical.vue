@@ -1,35 +1,10 @@
 <template>
-	<!-- <el-menu router :default-active="activeMenu" background-color="transparent" :collapse="state.isCollapse"
-		:collapse-transition="false" :unique-opened="true">
-		<template v-for="val in sidebarRouters">
-			<el-sub-menu :index="val.path" v-if="val.children && val.children.length > 0" :key="val.path">
-				<template #title>
-					<SvgIcon :name=" val.meta && val.meta.icon ?  val.meta.icon : '' " />
-					<span>{{   val.meta && val.meta.title ?  val.meta.title : '' }}</span>
-				</template>
-<SubItem :chil="val.children" />
-</el-sub-menu>
-<template v-else>
-				<el-menu-item :index="val.path" :key="val.path">
-					<SvgIcon :name=" val.meta && val.meta.icon ?  val.meta.icon : '' " />
-					<template #title v-if="val.meta && !val.meta.link">
-						<span>{{ val.meta && val.meta.title ?  val.meta.title : '' }}</span>
-					</template>
-<template #title v-else>
-						<a class="w100" @click.prevent="onALinkClick(val)">{{ val.meta && val.meta.title ?  val.meta.title : '' }}</a>
-					</template>
-</el-menu-item>
-</template>
-</template>
-
-</el-menu> -->
 
 	<el-menu :default-active="activeMenu" :collapse="state.isCollapse" background-color="transparent"
 		:unique-opened="true" :collapse-transition="false">
 		<sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route"
 			:base-path="route.path" />
 	</el-menu>
-
 
 </template>
 
