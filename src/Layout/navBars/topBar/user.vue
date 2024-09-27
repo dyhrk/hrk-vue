@@ -76,6 +76,7 @@ import useSettingsStore from '@/store/modules/settings';
 import useUserStore from '@/store/modules/user'
 import { storeToRefs } from 'pinia';
 import { defineAsyncComponent, computed, unref, ref, reactive, onMounted, onUnmounted } from 'vue';
+import mittBus from '@/utils/mitt';
 import { ElMessageBox, ElMessage, ClickOutside as vClickOutside } from 'element-plus';
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('@/Layout/navBars/topBar/userNews.vue'));
@@ -99,7 +100,7 @@ const state = reactive({
 });
 // 布局配置 icon 点击时
 const onLayoutSetingClick = () => {
-	// mittBus.emit('openSetingsDrawer');
+	mittBus.emit('openSetingsDrawer');
 };
 
 // 语言切换

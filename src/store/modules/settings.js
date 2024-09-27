@@ -5,6 +5,9 @@ const useSettingsStore = defineStore(
   {
     state: () => ({
       settingsConfig: {
+        // 是否开启布局配置抽屉
+			  isDrawer: false,
+
         // 默认 primary 主题颜色
         primary: '#409eff',
         // 是否开启深色模式

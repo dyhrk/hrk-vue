@@ -36,6 +36,21 @@ export function setTagsViewNameI18n(item) {
 }
 
 /**
+ * 判断是否是移动端
+ */
+export function isMobile() {
+	if (
+		navigator.userAgent.match(
+			/('phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone')/i
+		)
+	) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
  * 导出全局注册 element plus svg 图标
  * @param app vue 实例
  * @description 使用：https://element-plus.gitee.io/zh-CN/component/icon.html
@@ -79,6 +94,9 @@ const other = {
 	},
 	handleOpenLink: (val) => {
 		handleOpenLink(val);
+	},
+	isMobile: () => {
+		return isMobile();
 	},
 
 };
