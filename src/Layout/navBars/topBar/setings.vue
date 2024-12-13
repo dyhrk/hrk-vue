@@ -25,11 +25,13 @@
 </template>
 
 <script setup name="layoutBreadcrumbSeting">
+
 import mittBus from '@/utils/mitt';
 import other from '@/utils/other';
 import useSettingsStore from '@/store/modules/settings'
 import { useChangeColor } from '@/utils/theme';
 import { localCache } from '@/plugins/cache'
+import Watermark from '@/utils/watermark';
 
 const state = reactive({
 	isMobile: false,
@@ -113,8 +115,8 @@ const initLayoutChangeFun = () => {
 onMounted(() => {
 
 	nextTick(() => {
-		
-		
+
+
 		// 判断当前布局是否不相同，不相同则初始化当前布局的样式，防止监听窗口大小改变时，布局配置logo、菜单背景等部分布局失效问题
 		if (!localCache.get('frequency')) initLayoutChangeFun();
 		localCache.set('frequency', 1);
@@ -143,6 +145,42 @@ onMounted(() => {
 		}, 100);
 	});
 });
+
+// 4、界面显示 --> 开启水印
+const onWartermarkChange = () => {
+	getThemeConfig.value.isWartermark ? Watermark.set(getThemeConfig.value.wartermarkText) : Watermark.del();
+	setLocalThemeConfig();
+};
+
+// 存储布局配置
+const setLocalThemeConfig = () => {
+	localCache.remove('themeConfig');
+	localCache.set('themeConfig', getThemeConfig.value);
+};
+
+// 初始化菜单样式等
+const initSetStyle = () => {
+	// 2、菜单 / 顶栏 --> 顶栏背景渐变
+	onTopBarGradualChange();
+	// 2、菜单 / 顶栏 --> 菜单背景渐变
+	onMenuBarGradualChange();
+	// 2、菜单 / 顶栏 --> 分栏菜单背景渐变
+	onColumnsMenuBarGradualChange();
+};
+
+// 1、全局主题
+const onColorPickerChange = () => {
+	if (!getThemeConfig.value.primary) return ElMessage.warning('全局主题 primary 颜色值不能为空');
+	// 颜色加深
+	document.documentElement.style.setProperty('--el-color-primary-dark-2', `${getDarkColor(getThemeConfig.value.primary, 0.1)}`);
+	document.documentElement.style.setProperty('--el-color-primary', getThemeConfig.value.primary);
+	// 颜色变浅
+	for (let i = 1; i <= 9; i++) {
+		document.documentElement.style.setProperty(`--el-color-primary-light-${i}`, `${getLightColor(getThemeConfig.value.primary, i / 10)}`);
+	}
+	setDispatchThemeConfig();
+};
+
 // 暴露变量
 defineExpose({
 	openDrawer,
