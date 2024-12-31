@@ -20,3 +20,14 @@
         display: none !important;
     }
 }
+
+
+.link-type,
+.link-type:focus {
+  color: #409eff;
+  cursor: pointer;
+
+  &:hover {
+    color: rgb(32, 160, 255);
+  }
+}
