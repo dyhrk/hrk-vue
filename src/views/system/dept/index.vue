@@ -1,12 +1,12 @@
 <template>
-   <div class="app-container  w100">
+   <div class="app-container layout-padding  w100">
       <div class="queryCard">
          <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="80px">
             <el-form-item label="部门名称" prop="deptName" class="mb20">
                <el-input v-model="queryParams.deptName" placeholder="请输入部门名称" clearable style="width: 200px"
                   @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="状态" prop="status" class="mb20">
+            <el-form-item label="状态" prop="status" class="mb20 mr10">
                <el-select v-model="queryParams.status" placeholder="部门状态" clearable style="width: 200px">
                   <el-option v-for="dict in sys_normal_disable" :key="dict.value" :label="dict.label"
                      :value="dict.value" />
