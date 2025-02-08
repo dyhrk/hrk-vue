@@ -270,7 +270,7 @@ function getList() {
 function getTreeselect() {
    menuOptions.value = [];
    listMenu().then(response => {
-      const menu = { menuId: 0, menuName: "主类目", children: [] };
+      const menu = { menuId: "0", menuName: "主类目", children: [] };
       menu.children = proxy.handleTree(response.data, "menuId");
       menuOptions.value.push(menu);
    });
@@ -284,7 +284,7 @@ function cancel() {
 function reset() {
    form.value = {
       menuId: undefined,
-      parentId: 0,
+      parentId: "0",
       menuName: undefined,
       icon: undefined,
       menuType: "M",
@@ -313,7 +313,7 @@ function handleAdd(row) {
    if (row != null && row.menuId) {
       form.value.parentId = row.menuId;
    } else {
-      form.value.parentId = 0;
+      form.value.parentId = "0";
    }
    open.value = true;
    title.value = "添加菜单";
