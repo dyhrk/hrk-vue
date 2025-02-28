@@ -454,6 +454,7 @@ function handleUpdate(row) {
 /** 根据角色ID查询菜单树结构 */
 function getRoleMenuTreeselect(roleId) {
  return roleMenuTreeselect(roleId).then(response => {
+   response = response.data
    menuOptions.value = response.menus;
    return response;
  });
