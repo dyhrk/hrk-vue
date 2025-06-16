@@ -11,11 +11,11 @@
                   @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="系统内置" prop="configType" class="mb20">
-               <el-select v-model="queryParams.configType" placeholder="系统内置" clearable>
+               <el-select v-model="queryParams.configType" style="width: 200px" placeholder="系统内置" clearable>
                   <el-option v-for="dict in sys_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
                </el-select>
             </el-form-item>
-            <el-form-item label="创建时间" style="width: 308px;" class="mb20">
+            <el-form-item label="创建时间" style="width: 308px;" class="mb20 mr10">
                <el-date-picker v-model="dateRange" value-format="YYYY-MM-DD" type="daterange" range-separator="-"
                   start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>

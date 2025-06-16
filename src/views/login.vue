@@ -116,8 +116,7 @@ function handleLogin() {
 }
 function getCode() {
   getCodeImg().then((res) => {
-    captchaEnabled.value =
-      res.captchaEnabled === undefined ? true : res.captchaEnabled;
+    captchaEnabled.value = res.data.captchaEnabled;
     if (captchaEnabled.value) {
       codeUrl.value = res.data.img;
       loginForm.value.uuid = res.data.uuid;
@@ -128,7 +127,7 @@ function getCode() {
 function getCookie() {
   const username = Cookies.get("username");
   const password = Cookies.get("password");
-  const rememberMe = Cookies.get("rememberMe");
+  const rememberMe = Cookies.get("rememberMe"); 
   loginForm.value = {
     username: username === undefined ? loginForm.value.username : username,
     password:

@@ -16,8 +16,8 @@
                      :value="dict.value" />
                </el-select>
             </el-form-item>
-            <el-form-item label="创建时间" style="width: 308px" class="mb20">
-               <el-date-picker v-model="dateRange" value-format="YYYY-MM-DD" type="daterange" range-separator="-"
+            <el-form-item label="创建时间" style="width: 320px" class="mb20 mr10">
+               <el-date-picker style="width: 100%;" v-model="dateRange" value-format="YYYY-MM-DD" type="daterange" range-separator="-"
                   start-placeholder="开始日期" end-placeholder="结束日期"></el-date-picker>
             </el-form-item>
             <el-form-item class="mb20">
@@ -84,7 +84,7 @@
       </el-card>
       <!-- 添加或修改参数配置对话框 -->
       <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-         <el-form ref="dictRef" :model="form" :rules="rules" label-width="80px">
+         <el-form ref="dictRef" :model="form" size="large" :rules="rules" label-width="80px">
             <el-form-item label="字典名称" prop="dictName">
                <el-input v-model="form.dictName" placeholder="请输入字典名称" />
             </el-form-item>

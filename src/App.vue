@@ -16,7 +16,6 @@ const settingsStore = useSettingsStore()
 const { settingsConfig } = storeToRefs(settingsStore);
 
 import { defineAsyncComponent, computed, ref, onBeforeMount, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { useRoute } from 'vue-router';
 
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
